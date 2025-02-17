@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardManager : MonoBehaviour
+public class CardManager : SingleTon<CardManager>
 {
     [Header("카드")]
     [SerializeField] private Button card;

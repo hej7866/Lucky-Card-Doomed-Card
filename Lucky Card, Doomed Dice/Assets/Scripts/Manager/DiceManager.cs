@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DiceManager : MonoBehaviour
+public class DiceManager : SingleTon<DiceManager>
 {
     [Header("주사위")]
     [SerializeField] private Button dice;
