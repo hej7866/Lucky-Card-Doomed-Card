@@ -8,10 +8,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public Text statusText; // UI에 연결 상태 표시
     public string gameVersion = "1.0"; // 게임 버전 관리
 
-    private void Start()
-    {
-        ConnectToPhoton();
-    }
+    public GameObject loginPanel;
+    public GameObject roomList;
 
     // ✅ Photon 서버 연결 시도
     public void ConnectToPhoton()
@@ -36,6 +34,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         statusText.text = "🏠 로비 참가 완료! 방을 만들거나 참가하세요.";
         Debug.Log("✅ 로비 참가 완료!");
+
+        loginPanel.SetActive(false);
+        roomList.SetActive(true);
     }
 
     // ❌ 서버 연결 실패 시 호출

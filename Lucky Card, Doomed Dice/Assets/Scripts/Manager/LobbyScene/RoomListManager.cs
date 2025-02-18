@@ -39,6 +39,6 @@ public class RoomListManager : MonoBehaviourPunCallbacks
         string roomPassword = (string)room.CustomProperties["pwd"];
         Debug.Log($"🛠 방 '{room.Name}' 참가 시도, 비밀번호: {roomPassword}");
         
-        FindObjectOfType<RoomManager>().JoinRoomWithPassword(room);
+        FindObjectOfType<RoomManager>().TryJoinRoom(room);
     }
 }

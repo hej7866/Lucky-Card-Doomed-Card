@@ -9,20 +9,29 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button createRoomBtn;
     [SerializeField] private GameObject createRoomPanel;
     [SerializeField] private GameObject hideEffectPanel;
-    public InputField roomNameInput;  // 방 이름 입력 필드
-    public InputField passwordInput;  // 비밀번호 입력 필드
-    public Toggle passwordToggle;     // 비밀번호 사용 여부 체크박스
-    public Text roomStatusText;       // 방 상태 표시 UI
-    private string enteredRoomName;
-    private string enteredPassword;
+    
+    [Header("비밀번호 입력 UI")]
+    [SerializeField] private GameObject passwordInputPanel; // 비밀번호 입력 UI
+    [SerializeField] private InputField passwordInputField; // 비밀번호 입력 필드
+    [SerializeField] private Button confirmPasswordBtn; // 비밀번호 확인 버튼
+    private string selectedRoomName; // 선택한 방 이름 (비밀번호 확인용)
+    private string correctRoomPassword; // 선택한 방의 비밀번호 저장
+
+    public InputField roomNameInput;  
+    public InputField passwordInput;  
+    public Toggle passwordToggle;    
+    public Text roomStatusText;     
 
     private void Start()
     {
-        TogglePasswordInput(); // 초기 체크박스 상태 반영
-        passwordToggle.onValueChanged.AddListener(delegate { TogglePasswordInput(); }); // 체크박스 변경 감지
+        TogglePasswordInput();
+        passwordToggle.onValueChanged.AddListener(delegate { TogglePasswordInput(); });
+
+        // 비밀번호 확인 버튼에 함수 연결
+        confirmPasswordBtn.onClick.AddListener(AttemptJoinWithPassword);
     }
 
-    public void CreateRoom() // 방 생성 창 띄우기
+    public void CreateRoom()
     {
         hideEffectPanel.SetActive(true);
         createRoomPanel.SetActive(true);
@@ -37,18 +46,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
     // ✅ 체크박스 상태에 따라 비밀번호 입력 활성화 / 비활성화
     public void TogglePasswordInput()
     {
-        passwordInput.interactable = passwordToggle.isOn; // 체크되면 입력 가능, 아니면 비활성화
+        passwordInput.interactable = passwordToggle.isOn; 
         if (!passwordToggle.isOn)
         {
-            passwordInput.text = ""; // 체크 해제하면 비밀번호 초기화
+            passwordInput.text = ""; 
         }
     }
 
     // ✅ 방 생성 또는 참가 (공개방 / 비번방 설정)
     public void CreateOrJoinRoom()
     {
-        enteredRoomName = roomNameInput.text.Trim();
-        enteredPassword = passwordInput.text.Trim();
+        string enteredRoomName = roomNameInput.text.Trim();
+        string enteredPassword = passwordInput.text.Trim();
 
         if (string.IsNullOrEmpty(enteredRoomName))
         {
@@ -56,14 +65,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // 방 옵션 설정
         RoomOptions roomOptions = new RoomOptions
         {
             MaxPlayers = 2,
             CustomRoomProperties = new ExitGames.Client.Photon.Hashtable()
         };
 
-        // 비밀번호 방이면 Custom Properties에 비밀번호 추가
         if (passwordToggle.isOn && !string.IsNullOrEmpty(enteredPassword))
         {
             roomOptions.CustomRoomProperties["pwd"] = enteredPassword;
@@ -80,9 +87,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
         roomStatusText.text = $"✅ 방 '{PhotonNetwork.CurrentRoom.Name}' 참가 성공!";
         Debug.Log($"✅ 방 참가 완료! 현재 인원: {PhotonNetwork.CurrentRoom.PlayerCount}");
 
+        PhotonNetwork.AutomaticallySyncScene = true; 
+
         if (PhotonNetwork.IsMasterClient)
         {
+            Debug.Log("🎮 마스터 클라이언트가 씬 이동 실행!");
             PhotonNetwork.LoadLevel("GameScene");
+        }
+        else
+        {
+            Debug.Log("⏳ 대기 중... 마스터 클라이언트가 씬 이동을 실행해야 함");
         }
     }
 
@@ -93,35 +107,34 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.LogError($"❌ 방 참가 실패: {message}");
     }
 
-
     // ✅ 방 리스트에서 비밀번호 체크 후 참가 (방 목록 UI에서 선택 시 호출)
-    public void JoinRoomWithPassword(RoomInfo room)
+    public void TryJoinRoom(RoomInfo room)
     {
-        // 방에 비밀번호가 설정되지 않았다면 그냥 입장
+        selectedRoomName = room.Name;
+
+        // 방에 비밀번호가 없으면 즉시 참가
         if (!room.CustomProperties.ContainsKey("pwd") || string.IsNullOrEmpty((string)room.CustomProperties["pwd"]))
         {
-            PhotonNetwork.JoinRoom(room.Name);
-            roomStatusText.text = $"🚪 공개방 '{room.Name}' 참가 중...";
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PhotonNetwork.LoadLevel("GameScene");
-            }
+            PhotonNetwork.JoinRoom(selectedRoomName);
+            roomStatusText.text = $"🚪 공개방 '{selectedRoomName}' 참가 중...";
             return;
         }
 
-        // 비밀번호가 있는 방이라면 입력된 비밀번호와 비교
-        string roomPassword = (string)room.CustomProperties["pwd"];
+        // 비밀번호 방이면 비밀번호 입력 UI 활성화
+        correctRoomPassword = (string)room.CustomProperties["pwd"];
+        passwordInputPanel.SetActive(true); // 비밀번호 입력 UI 표시
+    }
 
-        if (roomPassword == enteredPassword) // 비밀번호 일치 여부 확인
+    // ✅ 사용자가 비밀번호 입력 후 확인 버튼을 누르면 실행
+    public void AttemptJoinWithPassword()
+    {
+        string enteredPassword = passwordInputField.text.Trim();
+
+        if (enteredPassword == correctRoomPassword) // 비밀번호가 맞다면 입장
         {
-            PhotonNetwork.JoinRoom(room.Name);
-            roomStatusText.text = $"🔑 비밀번호 확인 완료! 방 '{room.Name}' 참가 중...";
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PhotonNetwork.LoadLevel("GameScene");
-            }
+            passwordInputPanel.SetActive(false);
+            PhotonNetwork.JoinRoom(selectedRoomName);
+            roomStatusText.text = $"🔑 비밀번호 확인 완료! 방 '{selectedRoomName}' 참가 중...";
         }
         else
         {
@@ -129,5 +142,4 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Debug.LogError("❌ 비밀번호가 틀렸습니다!");
         }
     }
-
 }
