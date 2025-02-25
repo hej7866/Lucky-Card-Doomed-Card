@@ -86,6 +86,16 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
+    // 상대 플레이어가 방을 떠날 때 호출됨
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        // 상대방이 나가면 닉네임과 체력 텍스트를 초기화
+        enemyNickname.text = "닉네임 : -";
+        enemyHealthText.text = "HP : -";
+        enemyScoreText.text = "점수 : -";
+    }
+
+
     // 커스텀 프로퍼티 변경 시 호출 (상대방 체력이나 점수가 바뀔 때)
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
