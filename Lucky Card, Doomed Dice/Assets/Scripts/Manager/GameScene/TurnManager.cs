@@ -1,19 +1,32 @@
 using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class TurnManager : SingleTon<TurnManager>
+public class TurnManager : MonoBehaviourPunCallbacks
 {
-    public int maxTurns = 15; // 총 턴 제한
-    public int currTurn = 1; // 현재 턴
-    public float thinkingTime = 30f; // 카드 선택 시간
-    public float battleTime = 15f; // 전투 진행 시간
-    private bool isTurnActive = false; // 턴 진행 여부
+    public static TurnManager Instance { get; private set; }
+
+    public int maxTurns = 15;
+    private int currTurn = 1;
+    public float thinkingTime = 30f;
+    public float battleTime = 15f;
+    private bool isTurnActive = false;
     private float turnTimer;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
     private void Start()
     {
-        StartCoroutine(TurnRoutine());
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(TurnRoutine());
+        }
     }
 
     private IEnumerator TurnRoutine()
@@ -22,6 +35,9 @@ public class TurnManager : SingleTon<TurnManager>
         {
             isTurnActive = true;
             Debug.Log($"턴 {currTurn} 시작!");
+
+            // 턴을 모든 플레이어에게 동기화
+            photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
             // **① 준비 단계 (30초)**
             turnTimer = thinkingTime;
@@ -36,9 +52,22 @@ public class TurnManager : SingleTon<TurnManager>
         }
 
         Debug.Log("게임 종료!");
+        photonView.RPC("GameOver", RpcTarget.All);
     }
 
-    // 💡 준비 단계: 카드 뽑기 & 주사위 굴리기 & 공격/수비 선택
+    [PunRPC]
+    private void SyncTurn(int turn)
+    {
+        currTurn = turn;
+        Debug.Log($"턴 {currTurn} 동기화 완료!");
+    }
+
+    [PunRPC]
+    private void GameOver()
+    {
+        Debug.Log("게임이 끝났습니다! 승패를 결정하세요.");
+    }
+
     private IEnumerator ThinkingPhase()
     {
         Debug.Log("카드 선택 & 주사위 굴리기 단계");
@@ -52,11 +81,9 @@ public class TurnManager : SingleTon<TurnManager>
         Debug.Log("생각하는 시간이 끝났습니다!");
     }
 
-    // 💡 전투 단계: 카드 공개 & 결과 적용
     private IEnumerator BattlePhase()
     {
         Debug.Log("전투 단계");
-        // 카드와 주사위 값 공개
 
         while (turnTimer > 0)
         {
