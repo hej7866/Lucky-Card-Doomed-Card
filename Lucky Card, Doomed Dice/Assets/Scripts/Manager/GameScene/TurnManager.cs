@@ -3,10 +3,14 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviourPunCallbacks
 {
     public static TurnManager Instance { get; private set; }
+
+    [SerializeField] Text Phase;
+    [SerializeField] Text turnTime;
 
     public int maxTurns = 15;
     private int currTurn = 1;
@@ -21,7 +25,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         else Destroy(gameObject);
     }
 
-    private void Start()
+    public void TurnStart()
     {
         if (PhotonNetwork.IsMasterClient)
         {
@@ -40,7 +44,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
             // **① 준비 단계 (30초)**
-            turnTimer = thinkingTime;
+            turnTimer = thinkingTime; 
             yield return StartCoroutine(ThinkingPhase());
 
             // **② 전투 단계 (15초)**
@@ -75,6 +79,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
         while (turnTimer > 0)
         {
             turnTimer -= Time.deltaTime;
+            Phase.text = "전략 페이즈";
+            turnTime.text = Mathf.FloorToInt(turnTimer).ToString(); // 정수로 변환하여 표시
             yield return null;
         }
 
@@ -88,6 +94,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
         while (turnTimer > 0)
         {
             turnTimer -= Time.deltaTime;
+            Phase.text = "전투 페이즈";
+            turnTime.text = Mathf.FloorToInt(turnTimer).ToString(); // 정수로 변환하여 표시
             yield return null;
         }
 
