@@ -41,6 +41,9 @@ MonoBehaviour:
   - RespawnSpaceship
   - GameOver
   - SyncTurn
+  - UpdatePhase
+  - UpdateTurnTimer
+  - HideGameStartBtn
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

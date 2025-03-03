@@ -9,8 +9,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
 {
     public static TurnManager Instance { get; private set; }
 
-    [SerializeField] Text Phase;
-    [SerializeField] Text turnTime;
+    [SerializeField] private Text Phase;
+    [SerializeField] private Text turnTime;
 
     public int maxTurns = 15;
     private int currTurn = 1;
@@ -45,10 +45,12 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
             // **① 준비 단계 (30초)**
             turnTimer = thinkingTime; 
+            photonView.RPC("UpdatePhase", RpcTarget.All, "전략 페이즈", turnTimer);
             yield return StartCoroutine(ThinkingPhase());
 
             // **② 전투 단계 (15초)**
             turnTimer = battleTime;
+            photonView.RPC("UpdatePhase", RpcTarget.All, "전투 페이즈", turnTimer);
             yield return StartCoroutine(BattlePhase());
 
             // **③ 턴 종료 & 다음 턴 시작**
@@ -79,8 +81,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         while (turnTimer > 0)
         {
             turnTimer -= Time.deltaTime;
-            Phase.text = "전략 페이즈";
-            turnTime.text = Mathf.FloorToInt(turnTimer).ToString(); // 정수로 변환하여 표시
+            photonView.RPC("UpdateTurnTimer", RpcTarget.All, turnTimer);
             yield return null;
         }
 
@@ -94,11 +95,25 @@ public class TurnManager : MonoBehaviourPunCallbacks
         while (turnTimer > 0)
         {
             turnTimer -= Time.deltaTime;
-            Phase.text = "전투 페이즈";
-            turnTime.text = Mathf.FloorToInt(turnTimer).ToString(); // 정수로 변환하여 표시
+            photonView.RPC("UpdateTurnTimer", RpcTarget.All, turnTimer);
             yield return null;
         }
 
         Debug.Log("전투가 끝났습니다!");
+    }
+
+    [PunRPC]
+    private void UpdatePhase(string phase, float time)
+    {
+        Phase.text = phase;
+        turnTimer = time;
+        turnTime.text = Mathf.FloorToInt(turnTimer).ToString();
+    }
+
+    [PunRPC]
+    private void UpdateTurnTimer(float time)
+    {
+        turnTimer = time;
+        turnTime.text = Mathf.FloorToInt(turnTimer).ToString();
     }
 }
