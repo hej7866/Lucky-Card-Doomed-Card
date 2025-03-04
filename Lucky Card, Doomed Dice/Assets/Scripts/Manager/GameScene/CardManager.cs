@@ -11,9 +11,11 @@ public class CardManager : SingleTon<CardManager>
     [SerializeField] private Button card;
     Text cardNumber_txt;
 
+    public int drawCount = 0;
+    public int cardNumber;
+
     public event Action<int> OnCardNumberChanged; 
 
-    public int cardNumber;
 
     void Start()
     {
@@ -22,6 +24,14 @@ public class CardManager : SingleTon<CardManager>
 
     public void DrawCard()
     {
+        if(drawCount >= 3)
+        {
+            Debug.Log("카드를 더이상 뽑을 수 없습니다.");
+            return;
+        }
+
+        drawCount++; // 카드를 뽑은 횟수
+
         cardNumber = UnityEngine.Random.Range(1,11);
         
         OnCardNumberChanged?.Invoke(cardNumber);

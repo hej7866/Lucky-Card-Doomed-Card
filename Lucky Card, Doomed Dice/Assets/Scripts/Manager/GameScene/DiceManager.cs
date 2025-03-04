@@ -10,9 +10,11 @@ public class DiceManager : SingleTon<DiceManager>
     [SerializeField] private Button dice;
     Text diceNumber_txt;
 
+    public int rollCount = 0;
+    public int diceNumber;
+
     public event Action<int> OnDiceNumberChanged; 
 
-    public int diceNumber;
 
     void Start()
     {
@@ -21,6 +23,14 @@ public class DiceManager : SingleTon<DiceManager>
 
     public void RollDice()
     {
+        if(rollCount >= 3)
+        {
+            Debug.Log("주사위를 더이상 던질 수 없습니다.");
+            return;
+        }
+
+        rollCount++; // 주사위를 던진 횟수
+
         diceNumber = UnityEngine.Random.Range(1,7);
         
         OnDiceNumberChanged?.Invoke(diceNumber); 

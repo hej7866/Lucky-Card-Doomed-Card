@@ -40,20 +40,18 @@ public class TurnManager : MonoBehaviourPunCallbacks
             isTurnActive = true;
             Debug.Log($"턴 {currTurn} 시작!");
 
-            // 턴을 모든 플레이어에게 동기화
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
-            // **① 준비 단계 (30초)**
+            // **① 전략 페이즈 (30초) - 점수 숨기기**
             turnTimer = thinkingTime; 
-            photonView.RPC("UpdatePhase", RpcTarget.All, "전략 페이즈", turnTimer);
+            photonView.RPC("UpdatePhase", RpcTarget.All, "전략 페이즈", turnTimer, false);
             yield return StartCoroutine(ThinkingPhase());
 
-            // **② 전투 단계 (15초)**
+            // **② 전투 페이즈 (15초) - 점수 공개**
             turnTimer = battleTime;
-            photonView.RPC("UpdatePhase", RpcTarget.All, "전투 페이즈", turnTimer);
+            photonView.RPC("UpdatePhase", RpcTarget.All, "전투 페이즈", turnTimer, true);
             yield return StartCoroutine(BattlePhase());
 
-            // **③ 턴 종료 & 다음 턴 시작**
             currTurn++;
         }
 
@@ -103,11 +101,13 @@ public class TurnManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void UpdatePhase(string phase, float time)
+    private void UpdatePhase(string phase, float time, bool showScore)
     {
         Phase.text = phase;
         turnTimer = time;
         turnTime.text = Mathf.FloorToInt(turnTimer).ToString();
+
+        UIManager.Instance.ToggleScoreVisibility(showScore);
     }
 
     [PunRPC]

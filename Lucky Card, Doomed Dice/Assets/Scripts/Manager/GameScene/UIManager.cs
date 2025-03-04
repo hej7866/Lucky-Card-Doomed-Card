@@ -7,6 +7,8 @@ using System.Collections;
 
 public class UIManager : MonoBehaviourPunCallbacks
 {
+    public static UIManager Instance;
+
     [SerializeField] private Text playerNickname;
     [SerializeField] private Text playerHealthText;
     [SerializeField] private Text enemyNickname;
@@ -14,7 +16,13 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text playerScoreText;
     [SerializeField] private Text enemyScoreText;
 
-    private void Start()
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    void Start()
     {
         // 내 닉네임 설정 (이미 커스텀 프로퍼티에 저장되었다고 가정)
         if (PhotonNetwork.InRoom)
@@ -126,5 +134,10 @@ public class UIManager : MonoBehaviourPunCallbacks
                 enemyScoreText.text = $"점수 : {newScore}";
             }
         }
+    }
+
+    public void ToggleScoreVisibility(bool show)
+    {
+        enemyScoreText.gameObject.SetActive(show);
     }
 }
