@@ -29,6 +29,12 @@ public class DiceManager : SingleTon<DiceManager>
             return;
         }
 
+        if(TurnManager.Instance.selectScore)
+        {
+            Debug.Log("이미 스코어를 결정하셨습니다.");
+            return;
+        }
+
         rollCount++; // 주사위를 던진 횟수
 
         diceNumber = UnityEngine.Random.Range(1,7);

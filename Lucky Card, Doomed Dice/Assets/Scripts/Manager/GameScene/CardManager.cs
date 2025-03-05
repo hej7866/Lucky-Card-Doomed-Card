@@ -30,6 +30,12 @@ public class CardManager : SingleTon<CardManager>
             return;
         }
 
+        if(TurnManager.Instance.selectScore)
+        {
+            Debug.Log("이미 스코어를 결정하셨습니다.");
+            return;
+        }
+
         drawCount++; // 카드를 뽑은 횟수
 
         cardNumber = UnityEngine.Random.Range(1,11);

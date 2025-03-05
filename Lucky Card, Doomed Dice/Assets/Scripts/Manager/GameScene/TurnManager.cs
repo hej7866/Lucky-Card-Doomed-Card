@@ -19,6 +19,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
     private bool isTurnActive = false;
     private double turnEndTime;
 
+    public bool selectScore = false;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -39,6 +41,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
         {
             isTurnActive = true;
             Debug.Log($"턴 {currTurn} 시작!");
+
+            selectScore = false;
 
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 

@@ -5,6 +5,9 @@ using ExitGames.Client.Photon;
 
 public class ScoreManager : SingleTon<ScoreManager>
 {
+    [SerializeField] GameObject attackBtn;
+    [SerializeField] GameObject defenceBtn;
+
     public event Action<int> OnScoreChanged; // ✅ 점수 변경 이벤트
 
     private void Start()
@@ -44,5 +47,13 @@ public class ScoreManager : SingleTon<ScoreManager>
             Hashtable props = new Hashtable { { "Score", currentScore } };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
+    }
+    
+
+    public void SelectScore()
+    {
+        TurnManager.Instance.selectScore = true;
+        attackBtn.SetActive(true);
+        defenceBtn.SetActive(true);
     }
 }
