@@ -29,7 +29,7 @@ public class DiceManager : SingleTon<DiceManager>
             return;
         }
 
-        if(TurnManager.Instance.selectScore)
+        if(TurnManager.Instance.isScoreSelected)
         {
             Debug.Log("이미 스코어를 결정하셨습니다.");
             return;

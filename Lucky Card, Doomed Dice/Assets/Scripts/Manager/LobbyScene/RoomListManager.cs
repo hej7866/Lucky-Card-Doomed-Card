@@ -17,21 +17,30 @@ public class RoomListManager : MonoBehaviourPunCallbacks
         Debug.Log("✅ 로비 참가 완료! 방 목록을 가져옵니다.");
     }
 
-    // ✅ 방 목록 업데이트
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        Debug.Log($"📢 방 목록 업데이트: {roomList.Count}개의 방 발견됨.");
+
+        // ✅ 기존 목록 삭제 (삭제된 방 반영)
+        foreach (var item in roomItems.Values)
+        {
+            Destroy(item);
+        }
+        roomItems.Clear();
+
+        // ✅ 새로운 방 목록 추가
         foreach (RoomInfo room in roomList)
         {
-            if (!roomItems.ContainsKey(room.Name))
-            {
-                GameObject roomItem = Instantiate(roomListItemPrefab, roomListContainer);
-                roomItem.GetComponentInChildren<Text>().text = $"방: {room.Name} (인원 {room.PlayerCount}/2)";
-                roomItem.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room));
+            if (room.RemovedFromList) continue; // 삭제된 방 건너뛰기
 
-                roomItems.Add(room.Name, roomItem);
-            }
+            GameObject roomItem = Instantiate(roomListItemPrefab, roomListContainer);
+            roomItem.GetComponentInChildren<Text>().text = $"방: {room.Name} (인원 {room.PlayerCount}/2)";
+            roomItem.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room));
+
+            roomItems.Add(room.Name, roomItem);
         }
     }
+
 
     // ✅ 방 선택 후 참가
     public void JoinRoom(RoomInfo room)

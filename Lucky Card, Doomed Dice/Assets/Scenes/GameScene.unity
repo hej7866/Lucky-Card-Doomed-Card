@@ -777,7 +777,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 208634317}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1919536173}
+        m_TargetAssemblyTypeName: StrategyManager, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &208634317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1855,7 +1867,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 855935724}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1919536173}
+        m_TargetAssemblyTypeName: StrategyManager, Assembly-CSharp
+        m_MethodName: Defence
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &855935724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2422,7 +2446,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &1515857709
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2636,10 +2660,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Phase: {fileID: 1515857708}
   turnTime: {fileID: 1997879809}
+  playerHealthText: {fileID: 919094082}
+  enemyHealthText: {fileID: 42932051}
   maxTurns: 15
   thinkingTime: 30
   battleTime: 15
-  selectScore: 0
+  isScoreSelected: 0
 --- !u!114 &1597495165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2799,7 +2825,7 @@ GameObject:
   - component: {fileID: 1919536174}
   - component: {fileID: 1919536173}
   m_Layer: 0
-  m_Name: ScoreManager
+  m_Name: StrategyManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2817,8 +2843,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39d12008389962428f6442cb27ae9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackBtn: {fileID: 0}
-  defenceBtn: {fileID: 0}
+  attackBtn: {fileID: 208634314}
+  defenceBtn: {fileID: 855935721}
+  isAttackSelected: 0
+  isDefenceSelected: 0
 --- !u!4 &1919536174
 Transform:
   m_ObjectHideFlags: 0
@@ -2935,7 +2963,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &1997879810
 CanvasRenderer:
   m_ObjectHideFlags: 0
