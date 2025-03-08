@@ -43,4 +43,13 @@ public class DiceManager : SingleTon<DiceManager>
         diceNumber_txt.text = diceNumber.ToString();
         Debug.Log(diceNumber);
     }
+
+    public void ResetDice()
+    {
+        rollCount = 0;
+        diceNumber = 0;
+
+        OnDiceNumberChanged?.Invoke(diceNumber);
+        diceNumber_txt.text = diceNumber.ToString();
+    }
 }

@@ -44,11 +44,6 @@ public class TurnManager : MonoBehaviourPunCallbacks
             isTurnActive = true;
             Debug.Log($"턴 {currTurn} 시작!");
 
-            // 불 변수들 초기화
-            isScoreSelected = false;
-            StrategyManager.Instance.isAttackSelected = false;
-            StrategyManager.Instance.isDefenceSelected = false;
-
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
             // **① 전략 페이즈 (30초) - 점수 숨기기**
@@ -60,13 +55,45 @@ public class TurnManager : MonoBehaviourPunCallbacks
             photonView.RPC("CalculateBattle", RpcTarget.MasterClient);
             yield return new WaitUntil(() => !isTurnActive);
 
-
             currTurn++;
+            ResetSetting();
         }
 
         Debug.Log("게임 종료!");
         photonView.RPC("GameOver", RpcTarget.All);
     }
+
+    void ResetSetting()
+    {
+        photonView.RPC("ResetGameState", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void ResetGameState()
+    {
+        Debug.Log("게임 상태 초기화: 카드, 주사위, 공격 선택 초기화");
+
+        isScoreSelected = false;
+        StrategyManager.Instance.isAttackSelected = false;
+        StrategyManager.Instance.isDefenceSelected = false;
+
+        CardManager.Instance.ResetCard();
+        DiceManager.Instance.ResetDice();
+
+        // 초기화할 때 `null`을 사용하여 완전히 지움
+        ExitGames.Client.Photon.Hashtable resetProps = new ExitGames.Client.Photon.Hashtable
+        {
+            { "Score", null },
+            { "isAttackSelected", null },
+            { "EnemyScore", null },
+            { "EnemyAttack", null }
+        };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(resetProps);
+
+        Debug.Log("CustomProperties 초기화 완료!");
+    }
+
+
 
     private void StartTurnTimer(float duration, string phase, bool showScore)
     {
@@ -111,7 +138,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         int enemyScore = (int)enemyScoreObj;
         bool enemyAttack = (bool)enemyAttackObj;
 
-        Debug.Log($"[⚔️ 전투 시작] 플레이어 점수: {playerScore}, 상대 점수: {enemyScore}");
+        Debug.Log($"전투 시작 - 플레이어 점수: {playerScore}, 상대 점수: {enemyScore}");
         Debug.Log($"플레이어 공격 여부: {playerAttack}, 상대 공격 여부: {enemyAttack}");
 
         // 플레이어와 상대방의 ActorNumber 가져오기
@@ -127,55 +154,77 @@ public class TurnManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // 전투 로직
-        if (playerAttack && enemyAttack)
+        // 올바른 전투 로직 적용
+        if (playerAttack && enemyAttack) // 공격 vs 공격
         {
             if (playerScore > enemyScore)
             {
+                Debug.Log($"플레이어가 이겼음! 상대방에게 {playerScore * 2} 데미지");
                 enemyPlayer.TakeDamage(playerScore * 2);
             }
             else if (enemyScore > playerScore)
             {
+                Debug.Log($"상대방이 이겼음! 플레이어에게 {enemyScore * 2} 데미지");
                 myPlayer.TakeDamage(enemyScore * 2);
             }
         }
-        else if (playerAttack && !enemyAttack)
+        else if (playerAttack && !enemyAttack) // 공격 vs 수비
         {
             if (playerScore > enemyScore)
             {
-                enemyPlayer.TakeDamage(playerScore - enemyScore);
+                int damage = playerScore - enemyScore;
+                Debug.Log($"플레이어 공격 성공! 상대방에게 {damage} 데미지");
+                enemyPlayer.TakeDamage(damage);
+            }
+            else
+            {
+                Debug.Log($"상대방이 방어 성공! 데미지 없음");
             }
         }
-        else if (!playerAttack && !enemyAttack)
+        else if (!playerAttack && enemyAttack) // 수비 vs 공격 (반대 상황)
         {
+            if (enemyScore > playerScore)
+            {
+                int damage = enemyScore - playerScore;
+                Debug.Log($"상대방 공격 성공! 플레이어에게 {damage} 데미지");
+                myPlayer.TakeDamage(damage);
+            }
+            else
+            {
+                Debug.Log($"플레이어가 방어 성공! 데미지 없음");
+            }
+        }
+        else if (!playerAttack && !enemyAttack) // 수비 vs 수비 (쫄보죄)
+        {
+            Debug.Log($"쫄보죄! 플레이어: {playerScore} 데미지, 상대방: {enemyScore} 데미지");
             myPlayer.TakeDamage(playerScore);
             enemyPlayer.TakeDamage(enemyScore);
         }
 
-        // ✅ 체력 동기화
+        // 체력 동기화
         photonView.RPC("SyncHealth", RpcTarget.All, myActorNumber, enemyActorNumber, myPlayer.playerHealth, enemyPlayer.playerHealth);
     }
 
 
+
     [PunRPC]
-    private void SyncHealth(int myActorNumber,int enemyActorNumber, int newPlayerHealth, int newEnemyHealth)
+    private void SyncHealth(int myActorNumber, int enemyActorNumber, int newPlayerHealth, int newEnemyHealth)
     {
-        PlayerManager myPlayer = PlayerManager.GetPlayer(myActorNumber);
-        PlayerManager enemyPlayer = PlayerManager.GetPlayer(enemyActorNumber);
+        Debug.Log("SyncHealth 실행");
+        int localActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
 
-        if (myPlayer != null)
+        if (localActorNumber == myActorNumber)
         {
-            myPlayer.playerHealth = newPlayerHealth;
+            playerHealthText.text = $"HP: {newPlayerHealth}";
+            enemyHealthText.text = $"HP: {newEnemyHealth}";
         }
-
-        if (enemyPlayer != null)
+        else if (localActorNumber == enemyActorNumber)
         {
-            enemyPlayer.playerHealth = newEnemyHealth;
+            playerHealthText.text = $"HP: {newEnemyHealth}";
+            enemyHealthText.text = $"HP: {newPlayerHealth}";
         }
-
-        playerHealthText.text = $"HP: {newPlayerHealth}";
-        enemyHealthText.text = $"HP: {newEnemyHealth}";
     }
+
 
 
     [PunRPC]

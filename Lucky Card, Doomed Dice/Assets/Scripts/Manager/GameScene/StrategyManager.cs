@@ -15,7 +15,7 @@ public class StrategyManager : MonoBehaviourPunCallbacks
     public bool isAttackSelected = false;
     public bool isDefenceSelected = false;
 
-    public event Action<int> OnScoreChanged; // ✅ 점수 변경 이벤트
+    public event Action<int> OnScoreChanged; // 점수 변경 이벤트
 
     private void Awake()
     {
@@ -45,7 +45,7 @@ public class StrategyManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private int currentScore = 0; // ✅ 현재 점수 저장
+    private int currentScore = 0; // 현재 점수 저장
 
     public void CalculateScore()
     {
@@ -54,9 +54,9 @@ public class StrategyManager : MonoBehaviourPunCallbacks
         if (newScore != currentScore)
         {
             currentScore = newScore;
-            OnScoreChanged?.Invoke(currentScore); // ✅ UI 업데이트 이벤트 호출
+            OnScoreChanged?.Invoke(currentScore); // UI 업데이트 이벤트 호출
 
-            // ✅ Photon에 점수 업데이트
+            // Photon에 점수 업데이트
             Hashtable props = new Hashtable { { "Score", currentScore } };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
@@ -79,7 +79,9 @@ public class StrategyManager : MonoBehaviourPunCallbacks
         yield return new WaitUntil(() =>
             PhotonNetwork.PlayerListOthers.Length > 0 &&
             PhotonNetwork.PlayerListOthers[0].CustomProperties.ContainsKey("Score") &&
-            PhotonNetwork.PlayerListOthers[0].CustomProperties.ContainsKey("isAttackSelected")
+            PhotonNetwork.PlayerListOthers[0].CustomProperties["Score"] != null &&
+            PhotonNetwork.PlayerListOthers[0].CustomProperties.ContainsKey("isAttackSelected") &&
+            PhotonNetwork.PlayerListOthers[0].CustomProperties["isAttackSelected"] != null
         );
 
         // 상대방의 점수를 가져와서 `EnemyScore`로 저장

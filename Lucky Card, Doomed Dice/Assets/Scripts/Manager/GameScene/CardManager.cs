@@ -44,4 +44,13 @@ public class CardManager : SingleTon<CardManager>
         cardNumber_txt.text = cardNumber.ToString();
         Debug.Log(cardNumber);
     }
+
+    public void ResetCard()
+    {
+        drawCount = 0;
+        cardNumber = 0;
+
+        OnCardNumberChanged?.Invoke(cardNumber);
+        cardNumber_txt.text = cardNumber.ToString();
+    }
 }

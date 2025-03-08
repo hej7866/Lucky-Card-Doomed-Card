@@ -26,14 +26,14 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
     public void TakeDamage(int damage)
     {
-        if (!photonView.IsMine) return; // ✅ 내 캐릭터만 체력 감소
+        // if (!photonView.IsMine) return; // ✅ 내 캐릭터만 체력 감소
 
         playerHealth -= damage;
         if (playerHealth < 0) playerHealth = 0;
 
-        // ✅ 체력 변경을 Photon에 업데이트
-        Hashtable props = new Hashtable { { "Health", playerHealth } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        // // 체력 변경을 Photon에 업데이트
+        // Hashtable props = new Hashtable { { "Health", playerHealth } };
+        // PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
 
     public static PlayerManager GetPlayer(int actorNumber)
