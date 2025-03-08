@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviourPunCallbacks
 {
-    public static Dictionary<int, PlayerManager> Players = new Dictionary<int, PlayerManager>(); // ✅ ID 기반 관리
+    public static Dictionary<int, PlayerManager> Players = new Dictionary<int, PlayerManager>(); // ID 기반 관리
 
     public int playerHealth = 1000;
 
     private void Start()
     {
-        // ✅ photonView가 초기화된 후 등록 (Start에서 실행)
+        // photonView가 초기화된 후 등록 (Start에서 실행)
         if (!Players.ContainsKey(photonView.Owner.ActorNumber))
         {
             Players[photonView.Owner.ActorNumber] = this;

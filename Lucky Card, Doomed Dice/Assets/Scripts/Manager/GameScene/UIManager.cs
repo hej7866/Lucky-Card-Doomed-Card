@@ -136,6 +136,25 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC] // 체력 동기화
+    public void SyncHealth(int myActorNumber, int enemyActorNumber, int newPlayerHealth, int newEnemyHealth)
+    {
+        Debug.Log("SyncHealth 실행");
+        int localActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+
+        if (localActorNumber == myActorNumber)
+        {
+            playerHealthText.text = $"HP: {newPlayerHealth}";
+            enemyHealthText.text = $"HP: {newEnemyHealth}";
+        }
+        else if (localActorNumber == enemyActorNumber)
+        {
+            playerHealthText.text = $"HP: {newEnemyHealth}";
+            enemyHealthText.text = $"HP: {newPlayerHealth}";
+        }
+    }
+
+
     public void ToggleScoreVisibility(bool show)
     {
         enemyScoreText.gameObject.SetActive(show);

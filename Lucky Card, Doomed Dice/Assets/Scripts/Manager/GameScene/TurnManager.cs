@@ -46,12 +46,12 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
-            // **① 전략 페이즈 (30초) - 점수 숨기기**
-            StartTurnTimer(thinkingTime, "전략 페이즈", false);
+            // **전략 페이즈 (30초) - 점수 숨기기**
+            StartTurnTimer(thinkingTime, $"전략 {currTurn}페이즈", false);
             yield return new WaitUntil(() => !isTurnActive);
 
-            // **② 전투 페이즈 (15초) - 점수 공개 & 데미지 계산**
-            StartTurnTimer(battleTime, "전투 페이즈", true);
+            // **전투 페이즈 (15초) - 점수 공개 & 데미지 계산**
+            StartTurnTimer(battleTime, $"전투 {currTurn}페이즈", true);
             photonView.RPC("CalculateBattle", RpcTarget.MasterClient);
             yield return new WaitUntil(() => !isTurnActive);
 
@@ -154,7 +154,6 @@ public class TurnManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // 올바른 전투 로직 적용
         if (playerAttack && enemyAttack) // 공격 vs 공격
         {
             if (playerScore > enemyScore)
@@ -202,28 +201,10 @@ public class TurnManager : MonoBehaviourPunCallbacks
         }
 
         // 체력 동기화
-        photonView.RPC("SyncHealth", RpcTarget.All, myActorNumber, enemyActorNumber, myPlayer.playerHealth, enemyPlayer.playerHealth);
+        UIManager.Instance.photonView.RPC("SyncHealth", RpcTarget.All, myActorNumber, enemyActorNumber, myPlayer.playerHealth, enemyPlayer.playerHealth);
     }
 
 
-
-    [PunRPC]
-    private void SyncHealth(int myActorNumber, int enemyActorNumber, int newPlayerHealth, int newEnemyHealth)
-    {
-        Debug.Log("SyncHealth 실행");
-        int localActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-
-        if (localActorNumber == myActorNumber)
-        {
-            playerHealthText.text = $"HP: {newPlayerHealth}";
-            enemyHealthText.text = $"HP: {newEnemyHealth}";
-        }
-        else if (localActorNumber == enemyActorNumber)
-        {
-            playerHealthText.text = $"HP: {newEnemyHealth}";
-            enemyHealthText.text = $"HP: {newPlayerHealth}";
-        }
-    }
 
 
 
