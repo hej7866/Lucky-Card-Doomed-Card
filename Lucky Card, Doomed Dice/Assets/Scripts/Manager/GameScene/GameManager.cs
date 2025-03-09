@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        LogManager.Instance.AddLog("게임을 시작합니다.");
         TurnManager.Instance.TurnStart();
         gameStartBtn.SetActive(false);
     }

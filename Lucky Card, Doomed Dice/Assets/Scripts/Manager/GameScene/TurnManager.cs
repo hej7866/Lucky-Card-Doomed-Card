@@ -52,6 +52,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
             // **전투 페이즈 (15초) - 점수 공개 & 데미지 계산**
             StartTurnTimer(battleTime, $"전투 {currTurn}페이즈", true);
+
             photonView.RPC("CalculateBattle", RpcTarget.MasterClient);
             yield return new WaitUntil(() => !isTurnActive);
 

@@ -48,6 +48,7 @@ MonoBehaviour:
   - CalculateBattle
   - SyncHealth
   - ResetGameState
+  - RPC_AddLog
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
