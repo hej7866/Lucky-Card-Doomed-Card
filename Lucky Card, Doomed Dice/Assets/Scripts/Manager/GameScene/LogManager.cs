@@ -21,9 +21,24 @@ public class LogManager : MonoBehaviourPunCallbacks
     /// <summary>
     /// 로그 추가 함수 (모든 클라이언트에 동기화)
     /// </summary>
-    public void AddLog(string message)
+    public void AddRPCLog(string message)
     {
         photonView.RPC("RPC_AddLog", RpcTarget.All, message);
+    }
+
+    public void AddLog(string message)
+    {
+        GameObject newLog = Instantiate(logPrefab, logContent);
+        newLog.GetComponent<Text>().text = message;
+
+        logItems.Add(newLog);
+
+        // 로그가 너무 많아지면 가장 오래된 로그 삭제
+        if (logItems.Count > maxLogCount)
+        {
+            Destroy(logItems[0]);
+            logItems.RemoveAt(0);
+        }
     }
 
     [PunRPC]
