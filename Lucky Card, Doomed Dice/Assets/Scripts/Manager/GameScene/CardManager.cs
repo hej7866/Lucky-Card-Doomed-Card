@@ -40,9 +40,10 @@ public class CardManager : SingleTon<CardManager>
 
         cardNumber = UnityEngine.Random.Range(1,11);
         
+        
         OnCardNumberChanged?.Invoke(cardNumber);
         cardNumber_txt.text = cardNumber.ToString();
-        Debug.Log(cardNumber);
+        LogManager.Instance.AddLog($"카드를 뽑아 숫자{cardNumber}가 나왔습니다!!");
     }
 
     public void ResetCard()

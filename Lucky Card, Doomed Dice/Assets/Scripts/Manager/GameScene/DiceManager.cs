@@ -41,7 +41,7 @@ public class DiceManager : SingleTon<DiceManager>
         
         OnDiceNumberChanged?.Invoke(diceNumber); 
         diceNumber_txt.text = diceNumber.ToString();
-        Debug.Log(diceNumber);
+        LogManager.Instance.AddLog($"주사위를 굴려 숫자{diceNumber}가 나왔습니다!!");
     }
 
     public void ResetDice()

@@ -66,6 +66,7 @@ public class StrategyManager : MonoBehaviourPunCallbacks
     public void SelectScore()
     {
         TurnManager.Instance.isScoreSelected = true;
+        LogManager.Instance.AddLog("점수를 결정하였습니다! 공 / 수를 선택해주세요.");
         attackBtn.SetActive(true);
         defenceBtn.SetActive(true);
     }
