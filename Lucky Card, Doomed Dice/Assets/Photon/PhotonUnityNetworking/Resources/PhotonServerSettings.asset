@@ -49,6 +49,8 @@ MonoBehaviour:
   - SyncHealth
   - ResetGameState
   - RPC_AddLog
+  - RPC_EndGame
+  - ShowGameOverScreen
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -16,6 +16,11 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text playerScoreText;
     [SerializeField] private Text enemyScoreText;
 
+    [Header("게임종료 UI")]
+    [SerializeField] private GameObject hidePanel;
+    [SerializeField] private GameObject gameResultPanel;
+    [SerializeField] private Text gameResultText;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -151,6 +156,26 @@ public class UIManager : MonoBehaviourPunCallbacks
         {
             playerHealthText.text = $"HP: {newEnemyHealth}";
             enemyHealthText.text = $"HP: {newPlayerHealth}";
+        }
+    }
+
+    [PunRPC]
+    public void ShowGameOverScreen(string message) // 게임 종료 스크린 띄우는 로직
+    {
+        gameResultText.text = message;
+
+        hidePanel.SetActive(true);
+        gameResultPanel.SetActive(true);
+    }
+
+    public void CloseGameResultPanle() // 게임 결과 창 끄기
+    {
+        hidePanel.SetActive(false);
+        gameResultPanel.SetActive(false);
+
+        if(PhotonNetwork.IsMasterClient)
+        {
+            GameManager.Instance.gameStartBtn.SetActive(true);
         }
     }
 

@@ -26,13 +26,13 @@ public class CardManager : SingleTon<CardManager>
     {
         if(drawCount >= 3)
         {
-            Debug.Log("카드를 더이상 뽑을 수 없습니다.");
+            LogManager.Instance.AddLog("카드를 더이상 뽑을 수 없습니다.");
             return;
         }
 
         if(TurnManager.Instance.isScoreSelected)
         {
-            Debug.Log("이미 스코어를 결정하셨습니다.");
+            LogManager.Instance.AddLog("이미 스코어를 결정하셨습니다.");
             return;
         }
 

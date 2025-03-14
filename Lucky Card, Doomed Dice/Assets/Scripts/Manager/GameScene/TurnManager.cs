@@ -42,7 +42,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         while (currTurn <= maxTurns)
         {
             isTurnActive = true;
-            Debug.Log($"턴 {currTurn} 시작!");
+            LogManager.Instance.AddRPCLog($"턴 {currTurn} 시작!");
 
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
@@ -58,10 +58,33 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
             currTurn++;
             ResetSetting();
+
+            // ✅ 게임 종료 조건 확인 후 종료
+            if (CheckGameOverCondition())
+            {
+                GameManager.Instance.EndGame();
+                yield break;  // 루프 탈출
+            }
         }
 
-        Debug.Log("게임 종료!");
+        GameManager.Instance.EndGame();
         photonView.RPC("GameOver", RpcTarget.All);
+    }
+
+    private bool CheckGameOverCondition() // 게임 종료조건을 만족했는지 체크하는 로직
+    {
+        int alivePlayers = 0;
+
+        foreach (var player in PlayerManager.Players.Values)
+        {
+            if (player.playerHealth > 0)
+            {
+                alivePlayers++;
+            }
+        }
+
+        // 살아있는 플레이어가 1명 이하이면 게임 종료
+        return alivePlayers <= 1;
     }
 
     void ResetSetting()
@@ -212,7 +235,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void GameOver()
     {
-        Debug.Log("게임이 끝났습니다! 승패를 결정하세요.");
+        LogManager.Instance.AddRPCLog("게임이 끝났습니다! 승패를 결정하세요.");
     }
 
     private void Update()

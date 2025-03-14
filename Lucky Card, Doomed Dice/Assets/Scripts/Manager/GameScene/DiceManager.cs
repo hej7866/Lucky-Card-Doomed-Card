@@ -25,13 +25,13 @@ public class DiceManager : SingleTon<DiceManager>
     {
         if(rollCount >= 3)
         {
-            Debug.Log("주사위를 더이상 던질 수 없습니다.");
+            LogManager.Instance.AddLog("주사위를 더이상 던질 수 없습니다.");
             return;
         }
 
         if(TurnManager.Instance.isScoreSelected)
         {
-            Debug.Log("이미 스코어를 결정하셨습니다.");
+            LogManager.Instance.AddLog("이미 스코어를 결정하셨습니다.");
             return;
         }
 
