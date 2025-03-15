@@ -39,10 +39,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     
     public void EndGame()
     {
-        // 🔹 게임이 종료되었음을 알림
         LogManager.Instance.AddRPCLog("게임 종료!");
 
-        // 🔹 모든 플레이어의 체력을 검사하여 승자 판별
         PlayerManager winner = null;
         int maxHealth = 0;
 
@@ -55,19 +53,23 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
 
-        // 🔹 승자가 존재하면 메시지 출력
-        if (winner != null)
-        {
-            LogManager.Instance.AddRPCLog($"게임 종료! 승자: {winner.photonView.Owner.NickName}");
-        }
-        else
-        {
-            LogManager.Instance.AddRPCLog("게임 종료! 무승부");
-        }
+        int winnerActorNumber = (winner != null) ? winner.photonView.Owner.ActorNumber : -1;
+        string winnerNick = (winner != null) ? winner.photonView.Owner.NickName : "Unknown";
 
-        // 🔹 마스터 클라이언트가 방을 정리할 수 있도록 RPC 호출
-        photonView.RPC(nameof(RPC_EndGame), RpcTarget.All, winner?.photonView.Owner.ActorNumber ?? -1);
+        Debug.Log($"승자 확인 - ActorNumber: {winnerActorNumber}, 닉네임: {winnerNick}");
+
+        photonView.RPC(nameof(RPC_EndGame), RpcTarget.All, winnerActorNumber, winnerNick);
     }
+
+    [PunRPC]
+    void RPC_EndGame(int winnerActorNumber, string winnerNickName)
+    {
+        Debug.Log($"[RPC] 게임 종료 수신 - winnerActorNumber: {winnerActorNumber}, 닉네임: {winnerNickName}");
+
+        string message = (winnerActorNumber == -1) ? "무승부!" : $"승자: {winnerNickName}!";
+        UIManager.Instance.ShowGameOverScreen(message);
+    }
+
 
     [PunRPC]
     void RPC_EndGame(int winnerActorNumber)

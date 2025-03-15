@@ -663,7 +663,8 @@ MonoBehaviour:
   playerScoreText: {fileID: 660848532}
   enemyScoreText: {fileID: 934894830}
   hidePanel: {fileID: 1642133543}
-  gameResultPanel: {fileID: 0}
+  gameResultPanel: {fileID: 777492799}
+  gameResultText: {fileID: 1945185801}
 --- !u!114 &138726769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3131,7 +3132,7 @@ MonoBehaviour:
   turnTime: {fileID: 1997879809}
   playerHealthText: {fileID: 919094082}
   enemyHealthText: {fileID: 42932051}
-  maxTurns: 15
+  maxTurns: 3
   thinkingTime: 30
   battleTime: 15
   isScoreSelected: 0

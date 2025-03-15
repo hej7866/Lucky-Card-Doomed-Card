@@ -14,7 +14,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text playerHealthText;
     [SerializeField] private Text enemyHealthText;
 
-    public int maxTurns = 15;
+    [SerializeField] private int maxTurns = 3;
     private int currTurn = 1;
     public float thinkingTime = 30f;
     public float battleTime = 15f;
