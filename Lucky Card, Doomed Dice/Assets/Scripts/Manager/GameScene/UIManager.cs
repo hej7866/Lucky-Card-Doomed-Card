@@ -159,7 +159,6 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     public void ShowGameOverScreen(string message) // 게임 종료 스크린 띄우는 로직
     {
         gameResultText.text = message;
