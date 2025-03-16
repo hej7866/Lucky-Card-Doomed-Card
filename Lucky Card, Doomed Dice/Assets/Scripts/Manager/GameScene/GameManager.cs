@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         string message = (winnerActorNumber == -1) ? "무승부!" : $"승자: {winnerNickName}!";
         UIManager.Instance.ShowGameOverScreen(message);
+        Debug.Log("d");
     }
 
 
