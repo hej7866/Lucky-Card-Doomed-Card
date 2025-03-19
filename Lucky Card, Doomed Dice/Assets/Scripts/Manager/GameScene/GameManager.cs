@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         // UI 업데이트 (게임 종료 화면 표시 등)
         UIManager.Instance.ShowGameOverScreen(message);
+        Debug.Log("d");
 
         // 게임 재시작 버튼 활성화 (마스터 클라이언트)
         // if (PhotonNetwork.IsMasterClient)
