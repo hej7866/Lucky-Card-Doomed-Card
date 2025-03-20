@@ -174,6 +174,8 @@ public class UIManager : MonoBehaviourPunCallbacks
         hidePanel.SetActive(false);
         gameResultPanel.SetActive(false);
 
+        TurnManager.Instance.currTurn = 1;
+
         if(PhotonNetwork.IsMasterClient)
         {
             GameManager.Instance.gameStartBtn.SetActive(true);

@@ -32,8 +32,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     // ✅ 로비 접속 완료
     public override void OnJoinedLobby()
     {
-        statusText.text = "🏠 로비 참가 완료! 방을 만들거나 참가하세요.";
-        Debug.Log("✅ 로비 참가 완료!");
+        statusText.text = "로비 참가 완료! 방을 만들거나 참가하세요.";
+        Debug.Log("로비 참가 완료!");
 
         loginPanel.SetActive(false);
         roomList.SetActive(true);

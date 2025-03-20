@@ -77,15 +77,31 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.InRoom)
         {
-            Debug.Log("방을 나갑니다...");
+            Debug.Log("🚪 방을 나갑니다...");
             PhotonNetwork.LeaveRoom();
         }
     }
 
-    // ✅ 방을 나간 후 로비로 이동
+    // 방을 나간 후 연결 상태 확인하고 로비로 이동
     public override void OnLeftRoom()
     {
-        Debug.Log("방을 떠났습니다. 로비로 이동 중...");
+        Debug.Log("방을 떠났습니다. PhotonNetwork 상태 확인 중...");
+
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.LogWarning("⚠ Photon과의 연결이 끊어졌습니다. 재연결을 시도합니다...");
+            PhotonNetwork.ConnectUsingSettings(); // 다시 서버에 연결
+            return;
+        }
+
+        Debug.Log("Photon에 연결됨! 이제 OnConnectedToMaster()에서 로비로 이동할 것임.");
+    }
+
+    // Photon이 재연결되면 로비로 이동
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Photon 서버 재연결 성공! 로비로 이동합니다.");
         PhotonNetwork.JoinLobby();
+        PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 이동
     }
 }
