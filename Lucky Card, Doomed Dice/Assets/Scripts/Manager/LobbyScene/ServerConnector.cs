@@ -13,7 +13,7 @@ public class ServerConnector : MonoBehaviour
 
     private void Start()
     {
-        PlayFabSettings.TitleId = "47F57";  // 🔹 PlayFab Title ID 설정
+        PlayFabSettings.TitleId = "47F57";  // PlayFab Title ID 설정
     }
 
     // ✅ 서버에 닉네임 등록 및 로그인
@@ -73,23 +73,13 @@ public class ServerConnector : MonoBehaviour
 
     void SaveNicknameToPhoton(string nickname)
     {
-        // PlayFab 닉네임 설정
-        var request = new PlayFab.ClientModels.UpdateUserTitleDisplayNameRequest
-        {
-            DisplayName = nickname
-        };
+        // 🔹 Photon에서 사용할 닉네임 설정
+        PhotonNetwork.NickName = nickname;
 
-        PlayFabClientAPI.UpdateUserTitleDisplayName(request, result =>
-        {
-            Debug.Log($"✅ 닉네임 저장 성공: {result.DisplayName}");
+        // 🔹 Photon CustomProperties에도 닉네임 저장
+        Hashtable playerProperties = new Hashtable { { "Nickname", nickname } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
 
-            // Photon 플레이어 속성에도 닉네임 저장
-            Hashtable playerProperties = new Hashtable { { "Nickname", nickname } };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
-        },
-        error =>
-        {
-            Debug.LogError($"❌ 닉네임 저장 실패: {error.GenerateErrorReport()}");
-        });
+        Debug.Log($"Photon 닉네임 설정 완료: {PhotonNetwork.NickName}");
     }
 }

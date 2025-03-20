@@ -1,6 +1,5 @@
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -14,10 +13,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         else Destroy(gameObject);
     }
 
-
     void Start()
     {
-        if(!PhotonNetwork.IsMasterClient) // 방장이 아니라면 게임스타트 버튼을 숨긴다.
+        if (!PhotonNetwork.IsMasterClient) // 방장이 아니라면 게임스타트 버튼 숨김
         {
             gameStartBtn.SetActive(false);
         }   
@@ -25,7 +23,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void GameStart()
     {
-        // 🔹 상대방이 없으면 게임 시작 불가능
         if (PhotonNetwork.PlayerList.Length < 2)
         {
             Debug.LogWarning("상대방이 존재하지 않습니다. 게임을 시작할 수 없습니다.");
@@ -36,7 +33,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         TurnManager.Instance.TurnStart();
         gameStartBtn.SetActive(false);
     }
-    
+
     public void EndGame()
     {
         LogManager.Instance.AddRPCLog("게임 종료!");
@@ -70,22 +67,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         UIManager.Instance.ShowGameOverScreen(message);
     }
 
-
-    [PunRPC]
-    void RPC_EndGame(int winnerActorNumber)
+    public void RetryGame()
     {
-        string message = (winnerActorNumber == -1) ? "무승부" : $"승자: {PhotonNetwork.CurrentRoom.GetPlayer(winnerActorNumber).NickName}!";
-        Debug.Log($"[게임 종료] {message}");
-
-        // UI 업데이트 (게임 종료 화면 표시 등)
-        UIManager.Instance.ShowGameOverScreen(message);
-        Debug.Log("d");
-
-        // 게임 재시작 버튼 활성화 (마스터 클라이언트)
-        // if (PhotonNetwork.IsMasterClient)
-        // {
-        //     UIManager.Instance.ShowRestartButton();
-        // }
+        UIManager.Instance.CloseGameResultPanle();
     }
 
+    // ✅ 방 나가기 & 로비 이동
+    public void ExitRoom()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            Debug.Log("방을 나갑니다...");
+            PhotonNetwork.LeaveRoom();
+        }
+    }
+
+    // ✅ 방을 나간 후 로비로 이동
+    public override void OnLeftRoom()
+    {
+        Debug.Log("방을 떠났습니다. 로비로 이동 중...");
+        PhotonNetwork.JoinLobby();
+    }
 }

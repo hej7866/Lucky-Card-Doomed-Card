@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviourPunCallbacks
 {
     public static UIManager Instance;
 
+    [Header("플레이어 / 적 닉네임 및 체력 Text")]
     [SerializeField] private Text playerNickname;
     [SerializeField] private Text playerHealthText;
     [SerializeField] private Text enemyNickname;
@@ -20,6 +21,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject hidePanel;
     [SerializeField] private GameObject gameResultPanel;
     [SerializeField] private Text gameResultText;
+
 
     void Awake()
     {
