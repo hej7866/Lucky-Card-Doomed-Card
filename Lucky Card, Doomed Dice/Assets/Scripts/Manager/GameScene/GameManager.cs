@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsConnected)
         {
-            Debug.LogWarning("⚠ Photon과의 연결이 끊어졌습니다. 재연결을 시도합니다...");
+            Debug.LogWarning("Photon과의 연결이 끊어졌습니다. 재연결을 시도합니다...");
             PhotonNetwork.ConnectUsingSettings(); // 다시 서버에 연결
             return;
         }
