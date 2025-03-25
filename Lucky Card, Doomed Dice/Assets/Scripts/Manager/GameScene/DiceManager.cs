@@ -7,8 +7,10 @@ using System;
 public class DiceManager : SingleTon<DiceManager>
 {
     [Header("주사위")]
+    [SerializeField] private Sprite[] diceImgs;
     [SerializeField] private Button dice;
-    Text diceNumber_txt;
+    Image diceNumber_img;
+
 
     public int rollCount = 0;
     public int diceNumber;
@@ -18,7 +20,7 @@ public class DiceManager : SingleTon<DiceManager>
 
     void Start()
     {
-        diceNumber_txt = dice.GetComponentInChildren<Text>();
+        diceNumber_img = dice.GetComponent<Image>();
     }
 
     public void RollDice()
@@ -40,7 +42,8 @@ public class DiceManager : SingleTon<DiceManager>
         diceNumber = UnityEngine.Random.Range(1,7);
         
         OnDiceNumberChanged?.Invoke(diceNumber); 
-        diceNumber_txt.text = diceNumber.ToString();
+
+        diceNumber_img.sprite = diceImgs[diceNumber - 1];
         LogManager.Instance.AddLog($"주사위를 굴려 숫자{diceNumber}가 나왔습니다!!");
     }
 
@@ -50,6 +53,6 @@ public class DiceManager : SingleTon<DiceManager>
         diceNumber = 0;
 
         OnDiceNumberChanged?.Invoke(diceNumber);
-        diceNumber_txt.text = diceNumber.ToString();
+        diceNumber_img.sprite = diceImgs[diceNumber - 1];
     }
 }
