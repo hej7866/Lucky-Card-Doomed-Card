@@ -15,6 +15,7 @@ public class CardManager : SingleTon<CardManager>
     public int cardNumber;
 
     public event Action<int> OnCardNumberChanged; 
+    public event Action<int> OnDrawCountChanged; 
 
 
     void Start()
@@ -40,7 +41,7 @@ public class CardManager : SingleTon<CardManager>
 
         cardNumber = UnityEngine.Random.Range(1,11);
         
-        
+        OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
         cardNumber_txt.text = cardNumber.ToString();
         LogManager.Instance.AddLog($"카드를 뽑아 숫자{cardNumber}가 나왔습니다!!");

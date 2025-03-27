@@ -22,6 +22,10 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject gameResultPanel;
     [SerializeField] private Text gameResultText;
 
+    [Header("다이스 / 카드 카운트")]
+    [SerializeField] private Text DrawCountText;
+    [SerializeField] private Text RollCountText;
+
 
     void Awake()
     {
@@ -31,6 +35,9 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        CardManager.Instance.OnDrawCountChanged += _ => UpdateDrawCount();
+        
+
         // 내 닉네임 설정 (이미 커스텀 프로퍼티에 저장되었다고 가정)
         if (PhotonNetwork.InRoom)
         {
@@ -159,6 +166,11 @@ public class UIManager : MonoBehaviourPunCallbacks
             playerHealthText.text = $"HP: {newEnemyHealth}";
             enemyHealthText.text = $"HP: {newPlayerHealth}";
         }
+    }
+
+    public void UpdateDrawCount()
+    {
+        DrawCountText.text = $"{CardManager.Instance.drawCount} / 3";
     }
 
     public void ShowGameOverScreen(string message) // 게임 종료 스크린 띄우는 로직
