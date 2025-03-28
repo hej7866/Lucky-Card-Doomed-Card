@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     void Start()
     {
         CardManager.Instance.OnDrawCountChanged += _ => UpdateDrawCount();
+        DiceManager.Instance.OnRollCountChanged += _ => UpdateRollCount();
         
 
         // 내 닉네임 설정 (이미 커스텀 프로퍼티에 저장되었다고 가정)
@@ -171,6 +172,11 @@ public class UIManager : MonoBehaviourPunCallbacks
     public void UpdateDrawCount()
     {
         DrawCountText.text = $"{CardManager.Instance.drawCount} / 3";
+    }
+
+    public void UpdateRollCount()
+    {
+        RollCountText.text = $"{DiceManager.Instance.rollCount} / 3";
     }
 
     public void ShowGameOverScreen(string message) // 게임 종료 스크린 띄우는 로직

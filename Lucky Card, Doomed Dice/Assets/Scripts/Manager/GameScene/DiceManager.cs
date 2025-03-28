@@ -16,6 +16,7 @@ public class DiceManager : SingleTon<DiceManager>
     public int diceNumber;
 
     public event Action<int> OnDiceNumberChanged; 
+    public event Action<int> OnRollCountChanged; 
 
 
     void Start()
@@ -41,6 +42,7 @@ public class DiceManager : SingleTon<DiceManager>
 
         diceNumber = UnityEngine.Random.Range(1,7);
         
+        OnRollCountChanged?.Invoke(rollCount); 
         OnDiceNumberChanged?.Invoke(diceNumber); 
 
         diceNumber_img.sprite = diceImgs[diceNumber - 1];
@@ -52,6 +54,7 @@ public class DiceManager : SingleTon<DiceManager>
         rollCount = 0;
         diceNumber = 0;
 
+        OnRollCountChanged?.Invoke(rollCount); 
         OnDiceNumberChanged?.Invoke(diceNumber);
         diceNumber_img.sprite = diceImgs[diceNumber - 1];
     }

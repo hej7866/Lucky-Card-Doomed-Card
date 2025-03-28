@@ -43,6 +43,7 @@ public class CardManager : SingleTon<CardManager>
         
         OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
+        
         cardNumber_txt.text = cardNumber.ToString();
         LogManager.Instance.AddLog($"카드를 뽑아 숫자{cardNumber}가 나왔습니다!!");
     }
@@ -52,6 +53,7 @@ public class CardManager : SingleTon<CardManager>
         drawCount = 0;
         cardNumber = 0;
 
+         OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
         cardNumber_txt.text = cardNumber.ToString();
     }

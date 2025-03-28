@@ -7,7 +7,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 {
     public static Dictionary<int, PlayerManager> Players = new Dictionary<int, PlayerManager>(); // ID 기반 관리
 
-    public int playerHealth = 1000;
+    public int playerHealth = 500;
 
     private void Start()
     {
