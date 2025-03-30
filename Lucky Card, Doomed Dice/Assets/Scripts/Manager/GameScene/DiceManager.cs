@@ -13,7 +13,7 @@ public class DiceManager : SingleTon<DiceManager>
 
 
     public int rollCount = 0;
-    public int diceNumber;
+    public int diceNumber = 1;
 
     public event Action<int> OnDiceNumberChanged; 
     public event Action<int> OnRollCountChanged; 
@@ -52,7 +52,7 @@ public class DiceManager : SingleTon<DiceManager>
     public void ResetDice()
     {
         rollCount = 0;
-        diceNumber = 0;
+        diceNumber = 1;
 
         OnRollCountChanged?.Invoke(rollCount); 
         OnDiceNumberChanged?.Invoke(diceNumber);
