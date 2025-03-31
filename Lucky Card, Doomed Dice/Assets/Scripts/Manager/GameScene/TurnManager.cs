@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class TurnManager : MonoBehaviourPunCallbacks
 {
     public static TurnManager Instance { get; private set; }
+    public enum TurnPhase { None, Strategy, Battle }
 
     [SerializeField] private Text Phase;
     [SerializeField] private Text turnTime;
@@ -47,11 +48,11 @@ public class TurnManager : MonoBehaviourPunCallbacks
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
             // **전략 페이즈 (30초) - 점수 숨기기**
-            StartTurnTimer(thinkingTime, $"전략 {currTurn}페이즈", false);
+            StartTurnTimer(thinkingTime, TurnPhase.Strategy, $"전략 {currTurn}페이즈", false);
             yield return new WaitUntil(() => !isTurnActive);
 
             // **전투 페이즈 (15초) - 점수 공개 & 데미지 계산**
-            StartTurnTimer(battleTime, $"전투 {currTurn}페이즈", true);
+            StartTurnTimer(battleTime, TurnPhase.Battle, $"전투 {currTurn}페이즈", true);
 
             photonView.RPC("CalculateBattle", RpcTarget.MasterClient);
             yield return new WaitUntil(() => !isTurnActive);
@@ -119,12 +120,12 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
 
 
-    private void StartTurnTimer(float duration, string phase, bool showScore)
+    private void StartTurnTimer(float duration, TurnPhase turnPhase, string phase, bool showScore)
     {
         if (PhotonNetwork.IsMasterClient)
         {
             turnEndTime = PhotonNetwork.Time + duration;
-            photonView.RPC("SyncTurnTimer", RpcTarget.All, turnEndTime, phase, showScore);
+            photonView.RPC("SyncTurnTimer", RpcTarget.All, turnPhase, turnEndTime, phase, showScore);
         }
     }
 
@@ -136,7 +137,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void SyncTurnTimer(double endTime, string phase, bool showScore)
+    private void SyncTurnTimer(TurnPhase turnPhase, double endTime, string phase, bool showScore)
     {
         turnEndTime = endTime;
         isTurnActive = true;

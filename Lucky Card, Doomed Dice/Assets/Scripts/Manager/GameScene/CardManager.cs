@@ -53,7 +53,7 @@ public class CardManager : SingleTon<CardManager>
         drawCount = 0;
         cardNumber = 0;
 
-         OnDrawCountChanged?.Invoke(drawCount);
+        OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
         cardNumber_txt.text = cardNumber.ToString();
     }
