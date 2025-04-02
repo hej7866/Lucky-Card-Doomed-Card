@@ -115,7 +115,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         // 상대방이 나가면 닉네임과 체력 텍스트를 초기화
         enemyNickname.text = "닉네임 : -";
         enemyHealthText.text = "HP : -";
-        enemyScoreText.text = "점수 : -";
+        enemyScoreText.text = "점수 : 0";
     }
 
 

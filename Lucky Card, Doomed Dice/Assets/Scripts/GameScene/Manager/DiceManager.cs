@@ -45,7 +45,7 @@ public class DiceManager : SingleTon<DiceManager>
         OnRollCountChanged?.Invoke(rollCount); 
         OnDiceNumberChanged?.Invoke(diceNumber); 
 
-        diceNumber_img.sprite = diceImgs[diceNumber - 1];
+        diceNumber_img.sprite = diceImgs[diceNumber];
         LogManager.Instance.AddLog($"주사위를 굴려 숫자{diceNumber}가 나왔습니다!!");
     }
 
@@ -56,6 +56,6 @@ public class DiceManager : SingleTon<DiceManager>
 
         OnRollCountChanged?.Invoke(rollCount); 
         OnDiceNumberChanged?.Invoke(diceNumber);
-        diceNumber_img.sprite = diceImgs[diceNumber - 1];
+        diceNumber_img.sprite = diceImgs[0];
     }
 }
