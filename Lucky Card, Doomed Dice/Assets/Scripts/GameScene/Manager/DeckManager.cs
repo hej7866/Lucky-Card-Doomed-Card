@@ -16,7 +16,10 @@ public class DeckManager : SingleTon<DeckManager>
     public int maxUses = 3;
     private int usedCount = 0;
 
-
+    void Start()
+    {
+        InitializeDeck();
+    }
 
     public void InitializeDeck()
     {
