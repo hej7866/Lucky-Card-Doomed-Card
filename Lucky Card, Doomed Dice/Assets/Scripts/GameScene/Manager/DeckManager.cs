@@ -32,7 +32,7 @@ public class DeckManager : SingleTon<DeckManager>
             myDeck.Add(shuffled[i]);
         }
 
-        Debug.Log("덱 초기화 완료!");
+        Debug.Log("덱을 섞었습니다");
     }
 
     public bool CanUseCard()
