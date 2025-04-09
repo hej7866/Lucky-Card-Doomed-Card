@@ -26,6 +26,7 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
         switch (effect)
         {
             case SpellEffectType.DoubleScore:
+            {
                 if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Score", out object scoreObj))
                 {
                     int score = (int)scoreObj;
@@ -36,6 +37,24 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
                     Debug.Log($"스코어 두 배! {score} → {newScore}");
                 }
                 break;
+            }
+            case SpellEffectType.Gamble:
+            {
+                if(PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Score", out object scoreObj))
+                {
+                    int score = (int)scoreObj;
+
+                    int randomValue = Random.Range(0,2);
+                    float value = randomValue == 0 ? 0.5f : 2f;
+
+                    int newScore = (int)(score * value);
+
+                    Hashtable props = new Hashtable { { "Score", newScore } };
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+                    Debug.Log($"도박 적용! {score} → {newScore}");
+                }
+                break;
+            }
         }
     }
 

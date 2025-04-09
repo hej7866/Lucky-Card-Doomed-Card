@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text enemyScoreText;
 
     [Header("게임종료 UI")]
-    [SerializeField] private GameObject hidePanel;
+    public GameObject hidePanel;
     [SerializeField] private GameObject gameResultPanel;
     [SerializeField] private Text gameResultText;
 
