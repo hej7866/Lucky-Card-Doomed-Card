@@ -16,5 +16,5 @@ MonoBehaviour:
   description: "\uD604\uC7AC \uC810\uC218\uC5D0 (0.5 ~ 2)\uBC30\uB97C \uC801\uC6A9\uD55C\uB2E4"
   icon: {fileID: 0}
   cardType: 0
-  spellEffect: 0
+  spellEffect: 2
   trapEffect: 0

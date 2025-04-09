@@ -824,7 +824,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 112250430}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 138726770}
+        m_TargetAssemblyTypeName: CrackCardUIManager, Assembly-CSharp
+        m_MethodName: ShowCrackDeckUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &112250430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -874,6 +886,7 @@ GameObject:
   - component: {fileID: 138726767}
   - component: {fileID: 138726768}
   - component: {fileID: 138726769}
+  - component: {fileID: 138726770}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -941,6 +954,20 @@ MonoBehaviour:
   sceneViewId: 3
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &138726770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138726766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7aeeb8690788d548af4f4564517db3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardPrefab: {fileID: 1080788542204954472, guid: 3208c469cd28a3d4d94228304908b485, type: 3}
+  cardParent: {fileID: 1631068599}
 --- !u!1 &154196190
 GameObject:
   m_ObjectHideFlags: 0
@@ -1918,6 +1945,7 @@ GameObject:
   m_Component:
   - component: {fileID: 590226239}
   - component: {fileID: 590226238}
+  - component: {fileID: 590226240}
   m_Layer: 0
   m_Name: DeckManager
   m_TagString: Untagged
@@ -1939,6 +1967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allCardPool:
   - {fileID: 11400000, guid: 3fa6a98e4df50f6488d4f6582b6867b0, type: 2}
+  - {fileID: 11400000, guid: 46c7fd78658ca234887ebbaa11473748, type: 2}
   myDeck: []
   maxUses: 3
 --- !u!4 &590226239
@@ -1956,6 +1985,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &590226240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590226237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca4562a69d4667e4586759e1f13be419, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

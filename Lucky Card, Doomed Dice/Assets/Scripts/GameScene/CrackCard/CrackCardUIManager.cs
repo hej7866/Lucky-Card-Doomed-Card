@@ -26,6 +26,8 @@ public class CrackCardUIManager : MonoBehaviour
         {
             GameObject obj = Instantiate(cardPrefab, cardParent);
             obj.GetComponent<CrackCardView>().Setup(card);
+            var CrackCardClick = obj.GetComponent<CrackCardClick>();
+            CrackCardClick.Initialize(card);
         }
     }
 }
