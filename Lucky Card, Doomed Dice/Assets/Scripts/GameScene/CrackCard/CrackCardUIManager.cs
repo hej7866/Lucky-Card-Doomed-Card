@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CrackCardUIManager : MonoBehaviour
 {
@@ -8,10 +9,13 @@ public class CrackCardUIManager : MonoBehaviour
     [SerializeField] private GameObject cardParentObj;
     [SerializeField] private Transform cardParent;
 
+    [SerializeField] private GameObject offCrackDeckBtn;
+
 
     public void ShowCrackDeckUI()
     {
         cardParentObj.SetActive(true);
+        offCrackDeckBtn.SetActive(true);
         UIManager.Instance.hidePanel.SetActive(true);
         ShowCrackDeck(DeckManager.Instance.myDeck);
     }
@@ -30,6 +34,13 @@ public class CrackCardUIManager : MonoBehaviour
             var CrackCardClick = obj.GetComponent<CrackCardClick>();
             CrackCardClick.Initialize(card);
         }
+    }
+
+    public void OffCrackDeck()
+    {
+        cardParentObj.SetActive(false);
+        offCrackDeckBtn.SetActive(false);
+        UIManager.Instance.hidePanel.SetActive(false);
     }
 }
 

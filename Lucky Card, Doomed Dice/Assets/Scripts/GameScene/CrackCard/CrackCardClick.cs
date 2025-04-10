@@ -25,6 +25,12 @@ public class CrackCardClick : MonoBehaviour
 
     private void OnButtonClicked()
     {
+        if(TurnManager.Instance.isScoreSelected)
+        {
+            LogManager.Instance.AddLog("이미 스코어를 결정하셨습니다.");
+            return;
+        }
+        
         // 여기에 크랙카드 핸들러에 전달해주는 코드
         var user = PlayerManager.Players[PhotonNetwork.LocalPlayer.ActorNumber];
         PlayerManager opponent = null;

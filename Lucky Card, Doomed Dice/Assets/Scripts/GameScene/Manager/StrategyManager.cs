@@ -125,16 +125,17 @@ public class StrategyManager : MonoBehaviourPunCallbacks
         SaveProps(); // ✅ 공격/수비 선택 후 네트워크에 저장
     }
 
-    private void SaveProps()
+    public void SaveProps()
     {
-        Hashtable props = new Hashtable
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Score", out object scoreObj))
         {
-            { "Score", Card * Dice },
-            { "isAttackSelected", isAttackSelected }
-        };
-
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-        Debug.Log($"공격/수비 선택 완료! 네트워크에 저장: Score = {Card * Dice}, isAttackSelected = {isAttackSelected}");
+            Hashtable newProps = new Hashtable 
+            { 
+                { "Score", scoreObj }, 
+                { "isAttackSelected", isAttackSelected }    
+            };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(newProps);
+        }
 
         // ✅ 마스터 클라이언트가 상대방 점수를 가져와서 `EnemyScore`를 설정
         if (PhotonNetwork.IsMasterClient)

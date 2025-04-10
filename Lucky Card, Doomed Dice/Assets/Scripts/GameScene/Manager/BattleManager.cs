@@ -15,8 +15,19 @@ public class BattleManager : MonoBehaviourPunCallbacks
 
     public void CalculateBattle()
     {
-        int playerScore = StrategyManager.Instance.Card * StrategyManager.Instance.Dice;
-        bool playerAttack = StrategyManager.Instance.isAttackSelected;
+
+        // 내 정보 가져오기
+        object playerScoreObj, playerAttackObj;
+        if (!PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Score", out playerScoreObj) ||
+            !PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("isAttackSelected", out playerAttackObj)
+        )
+        {
+            Debug.LogError("로컬 플레이어의 Score 혹은 isAttackSelected를 찾을 수 없습니다! 전투 계산 중단");
+            return;
+        }
+
+        int playerScore = (int)playerScoreObj;
+        bool playerAttack = (bool)playerAttackObj;
 
         // 상대방의 정보 가져오기
         object enemyScoreObj, enemyAttackObj;
