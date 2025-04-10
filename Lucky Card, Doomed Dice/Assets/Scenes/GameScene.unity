@@ -967,6 +967,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 1080788542204954472, guid: 3208c469cd28a3d4d94228304908b485, type: 3}
+  cardParentObj: {fileID: 1631068598}
   cardParent: {fileID: 1631068599}
 --- !u!1 &154196190
 GameObject:
@@ -3736,7 +3737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1631068599
 RectTransform:
   m_ObjectHideFlags: 0

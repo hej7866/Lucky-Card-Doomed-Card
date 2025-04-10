@@ -5,12 +5,13 @@ using UnityEngine;
 public class CrackCardUIManager : MonoBehaviour
 {
     [SerializeField] private GameObject cardPrefab;
+    [SerializeField] private GameObject cardParentObj;
     [SerializeField] private Transform cardParent;
 
 
     public void ShowCrackDeckUI()
     {
-        cardPrefab.SetActive(true);
+        cardParentObj.SetActive(true);
         UIManager.Instance.hidePanel.SetActive(true);
         ShowCrackDeck(DeckManager.Instance.myDeck);
     }
