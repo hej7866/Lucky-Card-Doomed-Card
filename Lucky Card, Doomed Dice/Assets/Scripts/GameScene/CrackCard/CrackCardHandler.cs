@@ -12,7 +12,7 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
         switch (card.cardType)
         {
             case CrackCardType.Spell:
-                HandleSpell(card.spellEffect, user);
+                HandleSpell(card.spellEffect, user, opponent);
                 break;
 
             case CrackCardType.Trap:
@@ -21,7 +21,7 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
         }
     }
 
-    void HandleSpell(SpellEffectType effect, PlayerManager user)
+    void HandleSpell(SpellEffectType effect, PlayerManager user, PlayerManager opponent)
     {
         switch (effect)
         {
@@ -52,6 +52,22 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
                     Hashtable props = new Hashtable { { "Score", newScore } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);
                     Debug.Log($"도박 적용! {score} → {newScore}");
+                }
+                break;
+            }
+            case SpellEffectType.HeartOfTheBeast:
+            {
+                if(PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Score", out object scoreObj))
+                {
+                    int score = (int)scoreObj;
+
+                    int randomValue = Random.Range(0,2);
+
+                    int newScore = randomValue == 0 ? 0 : 60;
+
+                    Hashtable props = new Hashtable { { "Score", newScore } };
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+                    Debug.Log($"야수의 심장 적용! {score} → {newScore}");
                 }
                 break;
             }

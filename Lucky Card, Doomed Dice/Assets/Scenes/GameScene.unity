@@ -1971,6 +1971,7 @@ MonoBehaviour:
   allCardPool:
   - {fileID: 11400000, guid: 3fa6a98e4df50f6488d4f6582b6867b0, type: 2}
   - {fileID: 11400000, guid: 46c7fd78658ca234887ebbaa11473748, type: 2}
+  - {fileID: 11400000, guid: 90782e952cd486f458157d720abaa487, type: 2}
   myDeck: []
   maxUses: 3
 --- !u!4 &590226239

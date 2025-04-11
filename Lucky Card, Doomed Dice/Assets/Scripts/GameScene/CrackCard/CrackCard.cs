@@ -22,6 +22,7 @@ public enum SpellEffectType
 {
     None,           // <-- 기본값, 선택 안 된 상태
     DoubleScore,
+    HeartOfTheBeast,
     Gamble
 }
 
