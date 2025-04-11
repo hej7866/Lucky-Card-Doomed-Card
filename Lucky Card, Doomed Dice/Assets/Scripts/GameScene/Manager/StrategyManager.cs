@@ -92,12 +92,12 @@ public class StrategyManager : MonoBehaviourPunCallbacks
             if (player.CustomProperties.TryGetValue("Score", out enemyScoreObj) &&
                 player.CustomProperties.TryGetValue("isAttackSelected", out enemyAttackObj))
             {
-                Hashtable roomProps = new Hashtable
+                Hashtable enemyProps = new Hashtable
                 {
                     { "EnemyScore", enemyScoreObj },
                     { "EnemyAttack", enemyAttackObj }
                 };
-                PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
+                PhotonNetwork.CurrentRoom.SetCustomProperties(enemyProps);
 
                 Debug.Log($"상대방 점수 저장 완료! EnemyScore: {enemyScoreObj}, EnemyAttack: {enemyAttackObj}");
             }
@@ -129,12 +129,12 @@ public class StrategyManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Score", out object scoreObj))
         {
-            Hashtable newProps = new Hashtable 
+            Hashtable Props = new Hashtable 
             { 
                 { "Score", scoreObj }, 
                 { "isAttackSelected", isAttackSelected }    
             };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(newProps);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(Props);
         }
 
         // ✅ 마스터 클라이언트가 상대방 점수를 가져와서 `EnemyScore`를 설정
