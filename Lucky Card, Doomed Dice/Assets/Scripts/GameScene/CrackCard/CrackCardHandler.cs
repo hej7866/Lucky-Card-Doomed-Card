@@ -34,7 +34,7 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
 
                     Hashtable props = new Hashtable { { "Score", newScore } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-                    Debug.Log($"스코어 두 배! {score} → {newScore}");
+                    Debug.Log($"더블 스코어 적용! {score} → {newScore}");
                 }
                 break;
             }
