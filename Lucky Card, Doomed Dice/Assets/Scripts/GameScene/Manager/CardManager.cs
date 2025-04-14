@@ -25,11 +25,18 @@ public class CardManager : SingleTon<CardManager>
 
     public void DrawCard()
     {
+        if (TurnManager.Instance.CurrentPhase == TurnManager.TurnPhase.Battle)
+        {
+            LogManager.Instance.AddLog("전투 페이즈에는 카드를 뽑을 수 없습니다!");
+            return;
+        }
+
         if(drawCount >= 3)
         {
             LogManager.Instance.AddLog("카드를 더이상 뽑을 수 없습니다.");
             return;
         }
+        
 
         if(TurnManager.Instance.isScoreSelected)
         {

@@ -15,6 +15,9 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text playerHealthText;
     [SerializeField] private Text enemyHealthText;
 
+    public TurnPhase CurrentPhase { get; private set; } = TurnPhase.None;
+
+
     [SerializeField] private int maxTurns = 10;
     public int currTurn = 1;
     public float thinkingTime = 30f;
@@ -143,7 +146,12 @@ public class TurnManager : MonoBehaviourPunCallbacks
         isTurnActive = true;
         Phase.text = phase;
         UIManager.Instance.ToggleScoreVisibility(showScore);
+
+        // 현재 페이즈 설정
+        CurrentPhase = turnPhase;
+        Debug.Log($"[TurnManager] CurrentPhase = {CurrentPhase}");
     }
+
 
     [PunRPC]
     private void GameOver()

@@ -26,6 +26,13 @@ public class DiceManager : SingleTon<DiceManager>
 
     public void RollDice()
     {
+        if (TurnManager.Instance.CurrentPhase == TurnManager.TurnPhase.Battle)
+        {
+            LogManager.Instance.AddLog("전투 페이즈에는 주사위를 굴릴 수 없습니다!");
+            return;
+        }
+
+
         if(rollCount >= 3)
         {
             LogManager.Instance.AddLog("주사위를 더이상 던질 수 없습니다.");
