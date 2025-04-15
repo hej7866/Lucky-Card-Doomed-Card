@@ -56,28 +56,8 @@ public class DeckManager : SingleTon<DeckManager>
 
         usedCount++;
         myDeck.Remove(card);
-
-        PlayerManager user = null;
-        PlayerManager opponent = null;
-
-        foreach (var kvp in PlayerManager.Players)
-        {
-            if (kvp.Key == PhotonNetwork.LocalPlayer.ActorNumber)
-                user = kvp.Value;
-            else
-                opponent = kvp.Value;
-        }
-
-        if (user != null && opponent != null)
-        {
-            CrackCardHandler.Instance.UseCrackCard(card, user, opponent);
-            Debug.Log($"카드 사용: {card.cardName} ({usedCount}/{maxUses})");
-        }
-        else
-        {
-            Debug.LogWarning("플레이어 정보 부족 (user or opponent null)");
-        }
     }
+
 
     private void Shuffle<T>(List<T> list) // 튜플 스왑 알고리즘
     {

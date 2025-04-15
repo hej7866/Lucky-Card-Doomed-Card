@@ -25,12 +25,19 @@ public class CrackCardClick : MonoBehaviour
 
     private void OnButtonClicked()
     {
+        if (TurnManager.Instance.CurrentPhase == TurnManager.TurnPhase.Battle)
+        {
+            LogManager.Instance.AddLog("전투 페이즈에는 덱을 펼칠 수 없습니다!");
+            return;
+        }
+
+        
         if(TurnManager.Instance.isScoreSelected)
         {
             LogManager.Instance.AddLog("이미 스코어를 결정하셨습니다.");
             return;
         }
-        
+
         // 여기에 크랙카드 핸들러에 전달해주는 코드
         var user = PlayerManager.Players[PhotonNetwork.LocalPlayer.ActorNumber];
         PlayerManager opponent = null;
@@ -47,7 +54,9 @@ public class CrackCardClick : MonoBehaviour
         }
 
         CrackCardHandler.Instance.UseCrackCard(crackCardData, user, opponent);
-        Debug.Log($"{crackCardData.cardName} 카드를 사용했습니다!");
+        DeckManager.Instance.UseCard(crackCardData);
+        Destroy(this.gameObject);
+        LogManager.Instance.AddLog($"{crackCardData.cardName} 카드를 사용했습니다!");
     }
 }
 
