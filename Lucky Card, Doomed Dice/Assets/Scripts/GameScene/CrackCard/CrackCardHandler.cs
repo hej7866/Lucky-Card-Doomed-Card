@@ -34,7 +34,7 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
 
                     Hashtable props = new Hashtable { { "Score", newScore } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-                    Debug.Log($"더블 스코어 적용! {score} → {newScore}");
+                    LogManager.Instance.AddLog($"더블 스코어 적용! {score} → {newScore}");
                 }
                 break;
             }
@@ -51,7 +51,7 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
 
                     Hashtable props = new Hashtable { { "Score", newScore } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-                    Debug.Log($"도박 적용! {score} → {newScore}");
+                    LogManager.Instance.AddLog($"도박 적용! {score} → {newScore}");
                 }
                 break;
             }
@@ -67,10 +67,10 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
 
                     Hashtable props = new Hashtable { { "Score", newScore } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-                    Debug.Log($"야수의 심장 적용! {score} → {newScore}");
+                    LogManager.Instance.AddLog($"야수의 심장 적용! {score} → {newScore}");
                 }
                 break;
-            }
+            }   
         }
     }
 
