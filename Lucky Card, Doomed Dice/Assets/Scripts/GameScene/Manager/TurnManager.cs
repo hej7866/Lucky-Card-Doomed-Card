@@ -33,6 +33,19 @@ public class TurnManager : MonoBehaviourPunCallbacks
         else Destroy(gameObject);
     }
 
+    private void Update()
+    {
+        if (isTurnActive)
+        {
+            double timeRemaining = turnEndTime - PhotonNetwork.Time;
+            turnTime.text = Mathf.FloorToInt((float)timeRemaining).ToString();
+            
+            if (timeRemaining <= 0)
+            {
+                isTurnActive = false;
+            }
+        }
+    }
     public void TurnStart()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -52,12 +65,14 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
             // **전략 페이즈 (30초) - 점수 숨기기**
             StartTurnTimer(thinkingTime, TurnPhase.Strategy, $"전략 {currTurn}페이즈", false);
-            yield return new WaitUntil(() => !isTurnActive);
+            yield return new WaitUntil(() => !isTurnActive || AllPlayersSelectedScore());
 
             // **전투 페이즈 (15초) - 점수 공개 & 데미지 계산**
             StartTurnTimer(battleTime, TurnPhase.Battle, $"전투 {currTurn}페이즈", true);
 
+            yield return new WaitForSeconds(2f);
             BattleManager.Instance.CalculateBattle();
+
             yield return new WaitUntil(() => !isTurnActive);
 
             currTurn++;
@@ -73,6 +88,19 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
         GameManager.Instance.EndGame();
         photonView.RPC("GameOver", RpcTarget.All);
+    }
+
+    // 두 플레이어가 모두 점수를 선택했다면 
+    private bool AllPlayersSelectedScore() 
+    {
+        foreach (var player in PhotonNetwork.PlayerList)
+        {
+            if (!player.CustomProperties.TryGetValue("isAttackSelected", out object attackSelected) || attackSelected == null)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private bool CheckGameOverCondition() // 게임 종료조건을 만족했는지 체크하는 로직
@@ -159,17 +187,4 @@ public class TurnManager : MonoBehaviourPunCallbacks
         LogManager.Instance.AddRPCLog("게임이 끝났습니다! 승패를 결정하세요.");
     }
 
-    private void Update()
-    {
-        if (isTurnActive)
-        {
-            double timeRemaining = turnEndTime - PhotonNetwork.Time;
-            turnTime.text = Mathf.FloorToInt((float)timeRemaining).ToString();
-            
-            if (timeRemaining <= 0)
-            {
-                isTurnActive = false;
-            }
-        }
-    }
 }
