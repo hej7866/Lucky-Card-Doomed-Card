@@ -122,7 +122,7 @@ public class StrategyManager : MonoBehaviourPunCallbacks
         attackBtn.SetActive(false);
         defenceBtn.SetActive(false);
 
-        SaveProps(); // ✅ 공격/수비 선택 후 네트워크에 저장
+        SaveProps(); // 공격/수비 선택 후 네트워크에 저장
     }
 
     public void SaveProps()

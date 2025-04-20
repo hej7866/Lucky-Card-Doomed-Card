@@ -65,7 +65,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
             // **전략 페이즈 (30초) - 점수 숨기기**
             StartTurnTimer(thinkingTime, TurnPhase.Strategy, $"전략 {currTurn}페이즈", false);
-            yield return new WaitUntil(() => !isTurnActive || AllPlayersSelectedScore());
+            yield return new WaitUntil(() => !isTurnActive);
 
             // **전투 페이즈 (15초) - 점수 공개 & 데미지 계산**
             StartTurnTimer(battleTime, TurnPhase.Battle, $"전투 {currTurn}페이즈", true);
@@ -90,18 +90,6 @@ public class TurnManager : MonoBehaviourPunCallbacks
         photonView.RPC("GameOver", RpcTarget.All);
     }
 
-    // 두 플레이어가 모두 점수를 선택했다면 
-    private bool AllPlayersSelectedScore() 
-    {
-        foreach (var player in PhotonNetwork.PlayerList)
-        {
-            if (!player.CustomProperties.TryGetValue("isAttackSelected", out object attackSelected) || attackSelected == null)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     private bool CheckGameOverCondition() // 게임 종료조건을 만족했는지 체크하는 로직
     {
