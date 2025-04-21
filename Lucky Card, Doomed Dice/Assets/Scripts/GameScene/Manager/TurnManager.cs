@@ -12,6 +12,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private Text Phase;
     [SerializeField] private Text turnTime;
+    [SerializeField] private Text turnText;
     [SerializeField] private Text playerHealthText;
     [SerializeField] private Text enemyHealthText;
 
@@ -31,6 +32,11 @@ public class TurnManager : MonoBehaviourPunCallbacks
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        turnText.text = "1 / 10";   
     }
 
     private void Update()
@@ -76,6 +82,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
             yield return new WaitUntil(() => !isTurnActive);
 
             currTurn++;
+            turnText.text = $"{currTurn} / 10";
             ResetSetting();
 
             // ✅ 게임 종료 조건 확인 후 종료
