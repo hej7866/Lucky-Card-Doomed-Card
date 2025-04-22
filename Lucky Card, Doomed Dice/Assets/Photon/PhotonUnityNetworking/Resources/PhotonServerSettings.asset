@@ -51,6 +51,8 @@ MonoBehaviour:
   - RPC_AddLog
   - RPC_EndGame
   - ShowGameOverScreen
+  - TurnTextUI
+  - UpdateTurnText
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -82,7 +82,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
             yield return new WaitUntil(() => !isTurnActive);
 
             currTurn++;
-            turnText.text = $"{currTurn} / 10";
+            photonView.RPC("UpdateTurnText", RpcTarget.All, currTurn);
             ResetSetting();
 
             // ✅ 게임 종료 조건 확인 후 종료
@@ -95,6 +95,12 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
         GameManager.Instance.EndGame();
         photonView.RPC("GameOver", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void UpdateTurnText(int currTurn)
+    {
+        turnText.text = $"{currTurn} / 10";
     }
 
 
