@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager Instance;
 
     public GameObject gameStartBtn;
+    public GameObject exitRoomBtn;
+    
 
     private void Awake()
     {
