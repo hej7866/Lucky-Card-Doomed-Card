@@ -1,5 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
+using Photon.Realtime;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -7,7 +8,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public GameObject gameStartBtn;
     public GameObject exitRoomBtn;
-    
+
 
     private void Awake()
     {
@@ -22,6 +23,22 @@ public class GameManager : MonoBehaviourPunCallbacks
             gameStartBtn.SetActive(false);
         }   
     }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log($"방장이 변경되었습니다! 새로운 방장: {newMasterClient.NickName}");
+
+        // 자신이 새로운 방장이면 게임 시작 버튼 보이기
+        if (PhotonNetwork.IsMasterClient)
+        {
+            gameStartBtn.SetActive(true);
+        }
+        else
+        {
+            gameStartBtn.SetActive(false);
+        }
+    }
+
 
     public void GameStart()
     {
@@ -66,12 +83,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log($"[RPC] 게임 종료 수신 - winnerActorNumber: {winnerActorNumber}, 닉네임: {winnerNickName}");
 
         string message = (winnerActorNumber == -1) ? "무승부!" : $"승자: {winnerNickName}!";
-        UIManager.Instance.ShowGameOverScreen(message);
+        UIManager.Instance.ShowGameResultScreen(message);
     }
 
     public void RetryGame()
     {
-        UIManager.Instance.CloseGameResultPanle();
+        UIManager.Instance.CloseGameResultPanel();
     }
 
     // ✅ 방 나가기 & 로비 이동

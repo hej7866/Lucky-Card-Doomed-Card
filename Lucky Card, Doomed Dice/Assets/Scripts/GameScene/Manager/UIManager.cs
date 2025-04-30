@@ -22,6 +22,10 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject gameResultPanel;
     [SerializeField] private Text gameResultText;
 
+    [Header("방 나가기 UI")]
+    [SerializeField] private GameObject exitRoomPanel;
+
+
     [Header("다이스 / 카드 카운트")]
     [SerializeField] private Text DrawCountText;
     [SerializeField] private Text RollCountText;
@@ -35,30 +39,30 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        CardManager.Instance.OnDrawCountChanged += _ => UpdateDrawCount();
-        DiceManager.Instance.OnRollCountChanged += _ => UpdateRollCount();
-        
+        StartCoroutine(DelayedSetup());
+    }
 
-        // 내 닉네임 설정 (이미 커스텀 프로퍼티에 저장되었다고 가정)
-        if (PhotonNetwork.InRoom)
+    IEnumerator DelayedSetup()
+    {
+        yield return new WaitForSeconds(0.3f); // 0.3초 정도 기다린다
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Nickname", out object nickname))
         {
-            object nickname;
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Nickname", out nickname))
-            {
-                playerNickname.text = $"닉네임 : {nickname}";
-            }
+            playerNickname.text = $"닉네임 : {nickname}";
+        }
+        else
+        {
+            playerNickname.text = "닉네임 : ???";
         }
 
-        // 내 체력 초기화
-        object health;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Health", out health))
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Health", out object health))
         {
             playerHealthText.text = $"HP : {health}";
         }
 
-        // 상대방 정보 초기화 (방에 있는 다른 플레이어가 있으면)
         UpdateEnemyInfo();
     }
+
 
     // 상대 플레이어가 방에 입장했을 때 호출됨
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -179,7 +183,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         RollCountText.text = $"{DiceManager.Instance.rollCount} / 3";
     }
 
-    public void ShowGameOverScreen(string message) // 게임 종료 스크린 띄우는 로직
+    public void ShowGameResultScreen(string message) // 게임 종료 스크린 띄우는 로직
     {
         gameResultText.text = message;
 
@@ -187,7 +191,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         gameResultPanel.SetActive(true);
     }
 
-    public void CloseGameResultPanle() // 게임 결과 창 끄기
+    public void CloseGameResultPanel() // 게임 결과 창 끄기
     {
         hidePanel.SetActive(false);
         gameResultPanel.SetActive(false);
@@ -199,6 +203,19 @@ public class UIManager : MonoBehaviourPunCallbacks
             GameManager.Instance.gameStartBtn.SetActive(true);
         }
     }
+
+    public void ShowExitRoomScreen() // 게임 종료 스크린 띄우는 로직
+    {
+        hidePanel.SetActive(true);
+        exitRoomPanel.SetActive(true);
+    }
+
+    public void CloseExitRoomPanel() // 게임 결과 창 끄기
+    {
+        hidePanel.SetActive(false);
+        exitRoomPanel.SetActive(false);
+    }
+
 
 
     public void ToggleScoreVisibility(bool show)
