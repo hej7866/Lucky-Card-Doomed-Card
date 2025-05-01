@@ -24,6 +24,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         }   
     }
 
+    public void GameStart()
+    {
+        if (PhotonNetwork.PlayerList.Length < 2)
+        {
+            Debug.LogWarning("상대방이 존재하지 않습니다. 게임을 시작할 수 없습니다.");
+            return;
+        }
+
+        LogManager.Instance.AddRPCLog("게임을 시작합니다.");
+        TurnManager.Instance.TurnStart();
+        gameStartBtn.SetActive(false);
+    }
+
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         Debug.Log($"방장이 변경되었습니다! 새로운 방장: {newMasterClient.NickName}");
@@ -39,23 +52,33 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-
-    public void GameStart()
+    public override void OnPlayerLeftRoom(Player otherPlayer) // 상대방이 방을 떠났을 때
     {
-        if (PhotonNetwork.PlayerList.Length < 2)
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
         {
-            Debug.LogWarning("상대방이 존재하지 않습니다. 게임을 시작할 수 없습니다.");
-            return;
-        }
+            LogManager.Instance.AddRPCLog("상대방이 나갔습니다. 게임이 종료됩니다.");
+            EndGame();
 
-        LogManager.Instance.AddRPCLog("게임을 시작합니다.");
-        TurnManager.Instance.TurnStart();
-        gameStartBtn.SetActive(false);
+            photonView.RPC("GameOver", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    void ResetGameStateRPC() // 게임상태를 초기화하는 로직 (게임끝났을때 해줘야함)
+    {
+        TurnManager.Instance.ResetGameState();
+        StrategyManager.Instance.ResetStrategyState();
+        CardManager.Instance.ResetCard();
+        DiceManager.Instance.ResetDice();
+        DeckManager.Instance.InitializeDeck(); // 크랙카드도 초기화
     }
 
     public void EndGame()
     {
         LogManager.Instance.AddRPCLog("게임 종료!");
+
+        // 상태 초기화 전파
+        photonView.RPC("ResetGameStateRPC", RpcTarget.All);
 
         PlayerManager winner = null;
         int maxHealth = 0;

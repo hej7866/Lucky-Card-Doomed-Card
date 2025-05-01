@@ -144,4 +144,11 @@ public class StrategyManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ResetStrategyState()
+    {
+        isAttackSelected = false;
+        isDefenceSelected = false;
+    }
+
+
 }

@@ -122,11 +122,11 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
     void ResetSetting()
     {
-        photonView.RPC("ResetGameState", RpcTarget.All);
+        photonView.RPC("ResetTurnState", RpcTarget.All);
     }
 
     [PunRPC]
-    private void ResetGameState()
+    private void ResetTurnState()
     {
         Debug.Log("게임 상태 초기화: 카드, 주사위, 공격 선택 초기화");
 
@@ -180,6 +180,22 @@ public class TurnManager : MonoBehaviourPunCallbacks
         CurrentPhase = turnPhase;
         Debug.Log($"[TurnManager] CurrentPhase = {CurrentPhase}");
     }
+
+    public void ResetGameState()
+    {
+        StopAllCoroutines();               // 코루틴 중지
+        CurrentPhase = TurnPhase.None;
+        currTurn = 1;
+        isTurnActive = false;
+        isScoreSelected = false;
+
+        turnTime.text = "";
+        Phase.text = "";
+        turnText.text = "1 / 10";          // 첫 턴 기준
+
+        Debug.Log("TurnManager 초기화 완료");
+    }
+
 
 
     [PunRPC]
