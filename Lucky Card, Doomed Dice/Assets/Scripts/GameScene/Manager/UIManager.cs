@@ -40,6 +40,10 @@ public class UIManager : MonoBehaviourPunCallbacks
     void Start()
     {
         StartCoroutine(DelayedSetup());
+
+        // drawCount UI 갱신 이벤트 연결
+        CardManager.Instance.OnDrawCountChanged += UpdateDrawCount;
+        DiceManager.Instance.OnRollCountChanged += UpdateRollCount;
     }
 
     IEnumerator DelayedSetup()
@@ -173,14 +177,14 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void UpdateDrawCount()
+    public void UpdateDrawCount(int drawCount)
     {
-        DrawCountText.text = $"{CardManager.Instance.drawCount} / 3";
+        DrawCountText.text = $"{drawCount} / 3";
     }
 
-    public void UpdateRollCount()
+    public void UpdateRollCount(int rollCount)
     {
-        RollCountText.text = $"{DiceManager.Instance.rollCount} / 3";
+        RollCountText.text = $"{rollCount} / 3";
     }
 
     public void ShowGameResultScreen(string message) // 게임 종료 스크린 띄우는 로직

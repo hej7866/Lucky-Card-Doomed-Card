@@ -19,6 +19,15 @@ public class SingleTon<T> : MonoBehaviour where T : MonoBehaviour
 
     protected virtual void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        // 중복 방지 (DontDestroyOnLoad 안 쓰므로 씬마다 생겨도 됨)
+        if (instance == null)
+        {
+            instance = this as T;
+        }
+        else if (instance != this)
+        {
+            Debug.LogWarning($"{typeof(T).Name} 중복 인스턴스 제거");
+            Destroy(gameObject); // 중복된 거 파괴
+        }
     }
 }
