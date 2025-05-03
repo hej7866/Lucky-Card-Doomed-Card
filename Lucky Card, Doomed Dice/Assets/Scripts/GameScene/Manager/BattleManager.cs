@@ -98,9 +98,18 @@ public class BattleManager : MonoBehaviourPunCallbacks
         }
         else if (!playerAttack && !enemyAttack) // 수비 vs 수비 (쫄보죄)
         {
-            Debug.Log($"쫄보죄! 플레이어: {playerScore} 데미지, 상대방: {enemyScore} 데미지");
-            myPlayer.TakeDamage(playerScore);
-            enemyPlayer.TakeDamage(enemyScore);
+            if (playerScore > enemyScore)
+            {
+                int damage = playerScore;
+                Debug.Log($"쫄보죄! 플레이어에게 {damage} 데미지");
+                myPlayer.TakeDamage(damage);
+            }
+            else if(playerScore < enemyScore)
+            {
+                int damage = enemyScore;
+                Debug.Log($"쫄보죄! 상대방에게 {damage} 데미지");
+                enemyPlayer.TakeDamage(damage);
+            }
         }
 
         // 체력 동기화
