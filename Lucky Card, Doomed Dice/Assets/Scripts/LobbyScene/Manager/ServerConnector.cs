@@ -16,7 +16,7 @@ public class ServerConnector : MonoBehaviour
         PlayFabSettings.TitleId = "47F57";  // PlayFab Title ID 설정
     }
 
-    // ✅ 서버에 닉네임 등록 및 로그인
+    // 서버에 닉네임 등록 및 로그인
     public void ConnectToServer()
     {
         string nickname = nicknameInput.text.Trim();
@@ -37,17 +37,17 @@ public class ServerConnector : MonoBehaviour
 
         PlayFabClientAPI.LoginWithCustomID(request, result =>
         {
-            statusText.text = $"✅ 서버 연결 성공! 닉네임 저장 중...";
+            statusText.text = $"서버 연결 성공!";
             SaveNickname(nickname);
         },
         error =>
         {
-            statusText.text = $"❌ 서버 연결 실패: {error.GenerateErrorReport()}";
-            Debug.LogError($"❌ 서버 연결 실패: {error.GenerateErrorReport()}");
+            statusText.text = $"서버 연결 실패: {error.GenerateErrorReport()}";
+            Debug.LogError($"서버 연결 실패: {error.GenerateErrorReport()}");
         });
     }
 
-    // ✅ 서버에 닉네임 저장 후 Photon 연결 실행
+    // 서버에 닉네임 저장 후 Photon 연결 실행
     private void SaveNickname(string nickname)
     {
         var request = new UpdateUserTitleDisplayNameRequest
@@ -57,26 +57,26 @@ public class ServerConnector : MonoBehaviour
 
         PlayFabClientAPI.UpdateUserTitleDisplayName(request, result =>
         {
-            statusText.text = $"🎉 닉네임 '{result.DisplayName}' 저장 완료!";
-            Debug.Log($"🎉 닉네임 저장 성공: {result.DisplayName}");
+            statusText.text = $"닉네임 '{result.DisplayName}' 저장 완료!";
+            Debug.Log($"닉네임 저장 성공: {result.DisplayName}");
 
-            // ✅ PlayFab 로그인 & 닉네임 저장 후 Photon 서버 연결 시작
+            // PlayFab 로그인 & 닉네임 저장 후 Photon 서버 연결 시작
             SaveNicknameToPhoton(nickname);
             launcher.ConnectToPhoton();
         },
         error =>
         {
-            statusText.text = $"❌ 닉네임 저장 실패: {error.GenerateErrorReport()}";
-            Debug.LogError($"❌ 닉네임 저장 실패: {error.GenerateErrorReport()}");
+            statusText.text = $"닉네임 저장 실패: {error.GenerateErrorReport()}";
+            Debug.LogError($"닉네임 저장 실패: {error.GenerateErrorReport()}");
         });
     }
 
     void SaveNicknameToPhoton(string nickname)
     {
-        // 🔹 Photon에서 사용할 닉네임 설정
+        // Photon에서 사용할 닉네임 설정
         PhotonNetwork.NickName = nickname;
 
-        // 🔹 Photon CustomProperties에도 닉네임 저장
+        // Photon CustomProperties에도 닉네임 저장
         Hashtable playerProperties = new Hashtable { { "Nickname", nickname } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
 

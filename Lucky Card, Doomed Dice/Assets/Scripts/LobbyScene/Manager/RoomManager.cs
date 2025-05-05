@@ -61,7 +61,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         if (string.IsNullOrEmpty(enteredRoomName))
         {
-            roomStatusText.text = "⚠ 방 이름을 입력하세요!";
+            roomStatusText.text = "방 이름을 입력하세요!";
             return;
         }
 
@@ -78,33 +78,33 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.JoinOrCreateRoom(enteredRoomName, roomOptions, TypedLobby.Default);
-        roomStatusText.text = $"🛠 방 '{enteredRoomName}' 생성 또는 참가 시도...";
+        roomStatusText.text = $"방 '{enteredRoomName}' 입장 중...";
     }
 
-    // ✅ 방 참가 성공 시 게임 씬 이동
+    // 방 참가 성공 시 게임 씬 이동
     public override void OnJoinedRoom()
     {
-        roomStatusText.text = $"✅ 방 '{PhotonNetwork.CurrentRoom.Name}' 참가 성공!";
-        Debug.Log($"✅ 방 참가 완료! 현재 인원: {PhotonNetwork.CurrentRoom.PlayerCount}");
+        roomStatusText.text = $"방 '{PhotonNetwork.CurrentRoom.Name}' 참가 성공!";
+        Debug.Log($"방 참가 완료! 현재 인원: {PhotonNetwork.CurrentRoom.PlayerCount}");
 
         PhotonNetwork.AutomaticallySyncScene = true; 
 
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("🎮 마스터 클라이언트가 씬 이동 실행!");
+            Debug.Log("마스터 클라이언트가 씬 이동 실행!");
             PhotonNetwork.LoadLevel("GameScene");
         }
         else
         {
-            Debug.Log("⏳ 대기 중... 마스터 클라이언트가 씬 이동을 실행해야 함");
+            Debug.Log("대기 중... 마스터 클라이언트가 씬 이동을 실행해야 함");
         }
     }
 
-    // ❌ 방 참가 실패 시
+    // 방 참가 실패 시
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        roomStatusText.text = $"❌ 방 참가 실패: {message}";
-        Debug.LogError($"❌ 방 참가 실패: {message}");
+        roomStatusText.text = $"방 참가 실패: {message}";
+        Debug.LogError($"방 참가 실패: {message}");
     }
 
     // ✅ 방 리스트에서 비밀번호 체크 후 참가 (방 목록 UI에서 선택 시 호출)
@@ -116,7 +116,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (!room.CustomProperties.ContainsKey("pwd") || string.IsNullOrEmpty((string)room.CustomProperties["pwd"]))
         {
             PhotonNetwork.JoinRoom(selectedRoomName);
-            roomStatusText.text = $"🚪 공개방 '{selectedRoomName}' 참가 중...";
+            roomStatusText.text = $"공개방 '{selectedRoomName}' 참가 중...";
             return;
         }
 
@@ -134,12 +134,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             passwordInputPanel.SetActive(false);
             PhotonNetwork.JoinRoom(selectedRoomName);
-            roomStatusText.text = $"🔑 비밀번호 확인 완료! 방 '{selectedRoomName}' 참가 중...";
+            roomStatusText.text = $"비밀번호 확인 완료! 방 '{selectedRoomName}' 참가 중...";
         }
         else
         {
-            roomStatusText.text = $"❌ 비밀번호가 틀렸습니다!";
-            Debug.LogError("❌ 비밀번호가 틀렸습니다!");
+            roomStatusText.text = $"비밀번호가 틀렸습니다!";
+            Debug.LogError("비밀번호가 틀렸습니다!");
         }
     }
 }
