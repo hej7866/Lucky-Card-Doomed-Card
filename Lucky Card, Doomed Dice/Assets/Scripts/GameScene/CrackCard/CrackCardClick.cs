@@ -41,8 +41,8 @@ public class CrackCardClick : MonoBehaviour
         // 여기에 크랙카드 핸들러에 전달해주는 코드
         var user = PlayerManager.Players[PhotonNetwork.LocalPlayer.ActorNumber];
         PlayerManager opponent = null;
+        
         // 플레이어 찾기 로직 (예: Dictionary에서 내 ActorNumber가 아니면 opponent로 설정)
-
         // 예: 1:1 게임이라면
         foreach (var kvp in PlayerManager.Players)
         {
