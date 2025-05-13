@@ -63,7 +63,7 @@ public class CrackCardHandler : SingleTon<CrackCardHandler>
 
                     int randomValue = Random.Range(0,2);
 
-                    int newScore = randomValue == 0 ? 0 : 60;
+                    int newScore = randomValue == 0 ? 0 : 78; // 최대 점수는 78 
 
                     Hashtable props = new Hashtable { { "Score", newScore } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);

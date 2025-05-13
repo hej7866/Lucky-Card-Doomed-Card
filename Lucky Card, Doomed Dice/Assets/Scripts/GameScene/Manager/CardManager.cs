@@ -8,8 +8,9 @@ using System;
 public class CardManager : SingleTon<CardManager>
 {
     [Header("카드")]
+    [SerializeField] private Sprite[] cardImgs;
     [SerializeField] private Button card;
-    Text cardNumber_txt;
+    Image cardNumber_img;
 
     public int drawCount = 0;
     public int cardNumber;
@@ -20,7 +21,7 @@ public class CardManager : SingleTon<CardManager>
 
     void Start()
     {
-        cardNumber_txt = card.GetComponentInChildren<Text>();
+        cardNumber_img = card.GetComponent<Image>();
     }
 
     public void DrawCard()
@@ -46,12 +47,12 @@ public class CardManager : SingleTon<CardManager>
 
         drawCount++; // 카드를 뽑은 횟수
 
-        cardNumber = UnityEngine.Random.Range(1,11);
+        cardNumber = UnityEngine.Random.Range(1,14);
         
         OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
         
-        cardNumber_txt.text = cardNumber.ToString();
+        cardNumber_img.sprite = cardImgs[cardNumber];
         LogManager.Instance.AddLog($"카드를 뽑아 숫자{cardNumber}가 나왔습니다!!");
     }
 
@@ -62,6 +63,6 @@ public class CardManager : SingleTon<CardManager>
 
         OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
-        cardNumber_txt.text = cardNumber.ToString();
+        cardNumber_img.sprite = cardImgs[0];
     }
 }
