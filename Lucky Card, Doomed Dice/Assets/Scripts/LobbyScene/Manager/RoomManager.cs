@@ -43,7 +43,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         createRoomPanel.SetActive(false);
     }
 
-    // ✅ 체크박스 상태에 따라 비밀번호 입력 활성화 / 비활성화
+    // 체크박스 상태에 따라 비밀번호 입력 활성화 / 비활성화
     public void TogglePasswordInput()
     {
         passwordInput.interactable = passwordToggle.isOn; 
@@ -53,7 +53,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // ✅ 방 생성 또는 참가 (공개방 / 비번방 설정)
+    // 방 생성 또는 참가 (공개방 / 비번방 설정)
     public void CreateOrJoinRoom()
     {
         string enteredRoomName = roomNameInput.text.Trim();
@@ -107,7 +107,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.LogError($"방 참가 실패: {message}");
     }
 
-    // ✅ 방 리스트에서 비밀번호 체크 후 참가 (방 목록 UI에서 선택 시 호출)
+    // 방 리스트에서 비밀번호 체크 후 참가 (방 목록 UI에서 선택 시 호출)
     public void TryJoinRoom(RoomInfo room)
     {
         selectedRoomName = room.Name;
@@ -125,7 +125,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         passwordInputPanel.SetActive(true); // 비밀번호 입력 UI 표시
     }
 
-    // ✅ 사용자가 비밀번호 입력 후 확인 버튼을 누르면 실행
+    // 사용자가 비밀번호 입력 후 확인 버튼을 누르면 실행
     public void AttemptJoinWithPassword()
     {
         string enteredPassword = passwordInputField.text.Trim();

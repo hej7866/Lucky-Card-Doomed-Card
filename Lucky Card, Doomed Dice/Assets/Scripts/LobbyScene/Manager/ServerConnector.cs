@@ -23,7 +23,7 @@ public class ServerConnector : MonoBehaviour
 
         if (string.IsNullOrEmpty(nickname))
         {
-            statusText.text = "⚠ 닉네임을 입력하세요!";
+            statusText.text = "닉네임을 입력하세요!";
             return;
         }
 

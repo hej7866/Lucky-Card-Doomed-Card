@@ -14,21 +14,21 @@ public class RoomListManager : MonoBehaviourPunCallbacks
     // ✅ 로비에 들어오면 자동으로 방 목록 갱신 시작
     public override void OnJoinedLobby()
     {
-        Debug.Log("✅ 로비 참가 완료! 방 목록을 가져옵니다.");
+        Debug.Log("로비 참가 완료! 방 목록을 가져옵니다.");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log($"📢 방 목록 업데이트: {roomList.Count}개의 방 발견됨.");
+        Debug.Log($"방 목록 업데이트: {roomList.Count}개의 방 발견됨.");
 
-        // ✅ 기존 목록 삭제 (삭제된 방 반영)
+        // 기존 목록 삭제 (삭제된 방 반영)
         foreach (var item in roomItems.Values)
         {
             Destroy(item);
         }
         roomItems.Clear();
 
-        // ✅ 새로운 방 목록 추가
+        // 새로운 방 목록 추가
         foreach (RoomInfo room in roomList)
         {
             if (room.RemovedFromList) continue; // 삭제된 방 건너뛰기
@@ -42,11 +42,11 @@ public class RoomListManager : MonoBehaviourPunCallbacks
     }
 
 
-    // ✅ 방 선택 후 참가
+    // 방 선택 후 참가
     public void JoinRoom(RoomInfo room)
     {
         string roomPassword = (string)room.CustomProperties["pwd"];
-        Debug.Log($"🛠 방 '{room.Name}' 참가 시도, 비밀번호: {roomPassword}");
+        Debug.Log($"방 '{room.Name}' 참가 시도, 비밀번호: {roomPassword}");
         
         FindObjectOfType<RoomManager>().TryJoinRoom(room);
     }
