@@ -30,6 +30,9 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text DrawCountText;
     [SerializeField] private Text RollCountText;
 
+    [Header("설정 창")]
+    public GameObject settingPanel;
+
 
     void Awake()
     {
@@ -187,7 +190,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         RollCountText.text = $"{rollCount} / 3";
     }
 
-    public void ShowGameResultScreen(string message) // 게임 종료 스크린 띄우는 로직
+    public void ShowGameResultPanel(string message) // 게임 종료 스크린 띄우는 로직
     {
         gameResultText.text = message;
 
@@ -208,16 +211,26 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void ShowExitRoomScreen() // 게임 종료 스크린 띄우는 로직
+    public void ShowExitRoomPanel() // 방 나가기 스크린 띄우는 로직
     {
         hidePanel.SetActive(true);
         exitRoomPanel.SetActive(true);
     }
 
-    public void CloseExitRoomPanel() // 게임 결과 창 끄기
+    public void CloseExitRoomPanel() // 방 나가기 창 끄기
     {
         hidePanel.SetActive(false);
         exitRoomPanel.SetActive(false);
+    }
+
+    public void ShowSettingPanel()
+    {
+        settingPanel.SetActive(true);
+    }
+
+    public void CloseSettingPanel()
+    {
+        settingPanel.SetActive(false);
     }
 
 

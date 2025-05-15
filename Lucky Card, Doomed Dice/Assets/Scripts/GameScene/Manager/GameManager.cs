@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void RPC_EndGame(int winnerActorNumber, string winnerNickName)
     {
         string message = (winnerActorNumber == -1) ? "무승부!" : $"승자: {winnerNickName}!";
-        UIManager.Instance.ShowGameResultScreen(message);
+        UIManager.Instance.ShowGameResultPanel(message);
     }
 
     public void RetryGame()
