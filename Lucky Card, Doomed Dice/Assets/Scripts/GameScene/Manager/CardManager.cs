@@ -26,6 +26,12 @@ public class CardManager : SingleTon<CardManager>
 
     public void DrawCard()
     {
+        if(TurnManager.Instance.CurrentPhase == TurnManager.TurnPhase.None)
+        {
+            LogManager.Instance.AddLog("게임을 시작 하지않았습니다!");
+            return;
+        }
+
         if (TurnManager.Instance.CurrentPhase == TurnManager.TurnPhase.Battle)
         {
             LogManager.Instance.AddLog("전투 페이즈에는 카드를 뽑을 수 없습니다!");

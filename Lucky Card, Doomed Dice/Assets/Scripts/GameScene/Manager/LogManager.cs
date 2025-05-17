@@ -11,7 +11,7 @@ public class LogManager : MonoBehaviourPunCallbacks
     public Transform logContent; // Scroll View > Content
     public GameObject logPrefab; // LogItem 프리팹
     private List<GameObject> logItems = new List<GameObject>(); // 생성된 로그 저장 리스트
-    public int maxLogCount = 10; // 최대 로그 개수
+    public int maxLogCount = 9; // 최대 로그 개수
 
     void Awake()
     {
