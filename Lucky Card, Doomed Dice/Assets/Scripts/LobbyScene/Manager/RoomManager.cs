@@ -78,13 +78,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.JoinOrCreateRoom(enteredRoomName, roomOptions, TypedLobby.Default);
-        roomStatusText.text = $"방 '{enteredRoomName}' 입장 중...";
+        roomStatusText.text = $"방 입장 중...";
     }
 
     // 방 참가 성공 시 게임 씬 이동
     public override void OnJoinedRoom()
     {
-        roomStatusText.text = $"방 '{PhotonNetwork.CurrentRoom.Name}' 참가 성공!";
+        roomStatusText.text = $"방 참가 성공!";
         Debug.Log($"방 참가 완료! 현재 인원: {PhotonNetwork.CurrentRoom.PlayerCount}");
 
         PhotonNetwork.AutomaticallySyncScene = true; 
