@@ -33,6 +33,9 @@ public class UIManager : MonoBehaviourPunCallbacks
     [Header("설정 창")]
     public GameObject settingPanel;
 
+    [Header("Obj")]
+    [SerializeField] private GameObject objRoot;
+
 
     void Awake()
     {
@@ -47,6 +50,13 @@ public class UIManager : MonoBehaviourPunCallbacks
         // drawCount UI 갱신 이벤트 연결
         CardManager.Instance.OnDrawCountChanged += UpdateDrawCount;
         DiceManager.Instance.OnRollCountChanged += UpdateRollCount;
+
+        TurnManager.Instance.OnTurnPhaseChanged += HandleTurnPhaseChanged;
+    }
+
+    private void HandleTurnPhaseChanged(TurnManager.TurnPhase phase)
+    {
+        objRoot.SetActive(phase != TurnManager.TurnPhase.None);
     }
 
     IEnumerator DelayedSetup()

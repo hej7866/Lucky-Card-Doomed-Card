@@ -4,11 +4,12 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
+using System;
+
 
 public class TurnManager : MonoBehaviourPunCallbacks
 {
     public static TurnManager Instance { get; private set; }
-    public enum TurnPhase { None, Strategy, Battle }
 
     [SerializeField] private Text Phase;
     [SerializeField] private Text turnTime;
@@ -16,10 +17,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text playerHealthText;
     [SerializeField] private Text enemyHealthText;
 
-    public TurnPhase CurrentPhase { get; private set; } = TurnPhase.None;
-
-
     [SerializeField] private int maxTurns = 10;
+
     public int currTurn = 1;
     public float thinkingTime = 30f;
     public float battleTime = 15f;
@@ -27,6 +26,23 @@ public class TurnManager : MonoBehaviourPunCallbacks
     private double turnEndTime;
 
     public bool isScoreSelected = false;
+
+
+    public enum TurnPhase { None, Strategy, Battle }
+    public event Action<TurnPhase> OnTurnPhaseChanged;
+    private TurnPhase _currentPhase = TurnPhase.None;
+    public TurnPhase CurrentPhase
+    {
+        get => _currentPhase;
+        private set
+        {
+            if (_currentPhase != value)
+            {
+                _currentPhase = value;
+                OnTurnPhaseChanged?.Invoke(_currentPhase); 
+            }
+        }
+    }
 
     private void Awake()
     {
