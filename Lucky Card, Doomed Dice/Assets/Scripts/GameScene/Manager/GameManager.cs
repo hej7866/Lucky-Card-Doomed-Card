@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         UIManager.Instance.CloseGameResultPanel();
     }
 
-    // ✅ 방 나가기 & 로비 이동
+    // 방 나가기 & 로비 이동
     public void ExitRoom()
     {
         if (PhotonNetwork.InRoom)

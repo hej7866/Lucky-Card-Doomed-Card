@@ -45,4 +45,10 @@ public class Launcher : MonoBehaviourPunCallbacks
         statusText.text = $"서버 연결 실패: {cause}";
         Debug.LogError($"Photon 서버 연결 실패: {cause}");
     }
+
+
+    public void OnExitBtnClicked()
+    {
+        Application.Quit();
+    }
 }

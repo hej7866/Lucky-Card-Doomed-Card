@@ -96,7 +96,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log("대기 중... 마스터 클라이언트가 씬 이동을 실행해야 함");
+            Debug.Log("대기 중...");
         }
     }
 
