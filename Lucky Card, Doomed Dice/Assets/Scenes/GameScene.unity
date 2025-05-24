@@ -1116,6 +1116,7 @@ GameObject:
   - component: {fileID: 138726768}
   - component: {fileID: 138726769}
   - component: {fileID: 138726770}
+  - component: {fileID: 138726771}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -1150,6 +1151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf8cb178fd08b7244ba57312b30c55dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPanel: {fileID: 1413478420}
+  enemyPanel: {fileID: 1399682044}
   playerNickname: {fileID: 1863865700}
   playerHealthText: {fileID: 919094082}
   enemyNickname: {fileID: 785253623}
@@ -1202,6 +1205,20 @@ MonoBehaviour:
   cardParentObj: {fileID: 1631068598}
   cardParent: {fileID: 1631068599}
   offCrackDeckBtn: {fileID: 2020950299}
+--- !u!114 &138726771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138726766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90044ab83ada09f428ad788857d44225, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 2351506717835315895, guid: c3dc45763e84293429ce3d07429034f8, type: 3}
+  uiCanvas: {fileID: 154196194}
 --- !u!1 &154196190
 GameObject:
   m_ObjectHideFlags: 0
@@ -4491,6 +4508,7 @@ GameObject:
   - component: {fileID: 1399682045}
   - component: {fileID: 1399682047}
   - component: {fileID: 1399682046}
+  - component: {fileID: 1399682048}
   m_Layer: 5
   m_Name: Enemy_Panel
   m_TagString: Untagged
@@ -4558,6 +4576,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1399682044}
   m_CullTransparentMesh: 1
+--- !u!114 &1399682048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399682044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d30c6180d03f484abe03f67ac4c6b67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageTextPrefab: {fileID: 0}
+  uiCanvas: {fileID: 0}
 --- !u!1 &1413478420
 GameObject:
   m_ObjectHideFlags: 0
@@ -4569,6 +4601,7 @@ GameObject:
   - component: {fileID: 1413478421}
   - component: {fileID: 1413478423}
   - component: {fileID: 1413478422}
+  - component: {fileID: 1413478424}
   m_Layer: 5
   m_Name: Player_Panel
   m_TagString: Untagged
@@ -4636,6 +4669,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1413478420}
   m_CullTransparentMesh: 1
+--- !u!114 &1413478424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413478420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d30c6180d03f484abe03f67ac4c6b67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageTextPrefab: {fileID: 0}
+  uiCanvas: {fileID: 0}
 --- !u!1 &1515857706
 GameObject:
   m_ObjectHideFlags: 0
