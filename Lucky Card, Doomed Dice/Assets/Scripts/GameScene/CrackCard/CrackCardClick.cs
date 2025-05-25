@@ -17,6 +17,7 @@ public class CrackCardClick : MonoBehaviour
         crackCardPrefab.onClick.AddListener(OnButtonClicked);
     }
 
+
     public void Initialize(CrackCard card)
     {
         crackCardData = card;
@@ -31,17 +32,17 @@ public class CrackCardClick : MonoBehaviour
             return;
         }
 
-        
-        if(TurnManager.Instance.isScoreSelected)
+
+        if (TurnManager.Instance.isScoreSelected)
         {
             LogManager.Instance.AddLog("이미 스코어를 결정하셨습니다.");
             return;
         }
 
         // 여기에 크랙카드 핸들러에 전달해주는 코드
-        var user = PlayerManager.Players[PhotonNetwork.LocalPlayer.ActorNumber];
+            var user = PlayerManager.Players[PhotonNetwork.LocalPlayer.ActorNumber];
         PlayerManager opponent = null;
-        
+
         // 플레이어 찾기 로직 (예: Dictionary에서 내 ActorNumber가 아니면 opponent로 설정)
         // 예: 1:1 게임이라면
         foreach (var kvp in PlayerManager.Players)
@@ -55,8 +56,10 @@ public class CrackCardClick : MonoBehaviour
 
         CrackCardHandler.Instance.UseCrackCard(crackCardData, user, opponent);
         DeckManager.Instance.UseCard(crackCardData);
+        if (!DeckManager.Instance.CanUseCard()) return;
         Destroy(this.gameObject);
         LogManager.Instance.AddLog($"{crackCardData.cardName} 카드를 사용했습니다!");
+        DeckManager.Instance.usedCount++;
     }
 }
 

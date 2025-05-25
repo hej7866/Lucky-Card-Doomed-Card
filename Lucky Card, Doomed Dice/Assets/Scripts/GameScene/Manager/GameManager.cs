@@ -108,6 +108,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void RetryGame()
     {
         UIManager.Instance.CloseGameResultPanel();
+
+        foreach (var player in Photon.Pun.PhotonNetwork.PlayerList) // 체력 초기화
+        {
+            if (player.IsLocal)
+            {
+                PlayerManager.GetPlayer(player.ActorNumber).SetHealth(500); // 내부 상태
+            }
+
+            ExitGames.Client.Photon.Hashtable hash = new ExitGames.Client.Photon.Hashtable();
+            hash["Health"] = 500;
+            player.SetCustomProperties(hash); // 네트워크에 체력 동기화
+        }
     }
 
     // 방 나가기 & 로비 이동

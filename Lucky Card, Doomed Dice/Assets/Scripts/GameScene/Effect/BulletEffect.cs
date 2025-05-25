@@ -8,8 +8,8 @@ public class BulletEffect : MonoBehaviour
     [Header("탄환 프리팹")]
     public GameObject bulletPrefab;
 
-    [Header("UI 캔버스")]
-    public RectTransform uiCanvas;
+    [Header("총알 박스")]
+    [SerializeField] private RectTransform bulletContainer;
 
     /// <summary>
     /// start에서 end로 탄환 발사
@@ -22,8 +22,9 @@ public class BulletEffect : MonoBehaviour
 
             DOVirtual.DelayedCall(currentDelay, () =>
             {
-                GameObject bullet = Instantiate(bulletPrefab, uiCanvas);
+                GameObject bullet = Instantiate(bulletPrefab, bulletContainer);
                 bullet.transform.SetSiblingIndex(0); // 가장 아래로 이동
+
                 RectTransform bulletRt = bullet.GetComponent<RectTransform>();
 
                 Vector2 startPos = start.anchoredPosition;

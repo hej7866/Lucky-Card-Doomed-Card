@@ -36,6 +36,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         // PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
 
+    public void SetHealth(int hp)
+    {
+        playerHealth = hp;
+    }
+
     public static PlayerManager GetPlayer(int actorNumber)
     {
         return Players.ContainsKey(actorNumber) ? Players[actorNumber] : null;

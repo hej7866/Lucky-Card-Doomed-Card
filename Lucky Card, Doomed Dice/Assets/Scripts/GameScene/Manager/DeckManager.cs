@@ -12,9 +12,27 @@ public class DeckManager : SingleTon<DeckManager>
     [Header("현재 내 덱")]
     public List<CrackCard> myDeck = new List<CrackCard>();
 
-    [Header("최대 사용 가능 횟수")]
-    public int maxUses = 3;
-    private int usedCount = 0;
+    [Header("사용 가능 횟수")]
+    public int usedCount = 0;
+
+    
+    private void OnEnable()
+    {
+        TurnManager.Instance.OnTurnPhaseChanged += HandlePhaseChanged;
+    }
+
+    private void OnDisable()
+    {
+        TurnManager.Instance.OnTurnPhaseChanged -= HandlePhaseChanged;
+    }
+
+    private void HandlePhaseChanged(TurnManager.TurnPhase currPhase)
+    {
+        if (currPhase == TurnManager.TurnPhase.Battle)
+        {
+            usedCount = 0;
+        }
+    }
 
     void Start()
     {
@@ -37,14 +55,14 @@ public class DeckManager : SingleTon<DeckManager>
 
     public bool CanUseCard()
     {
-        return usedCount < maxUses;
+        return usedCount == 0;
     }
 
     public void UseCard(CrackCard card)
     {
         if (!CanUseCard())
         {
-            Debug.LogWarning("카드 사용 횟수 초과!");
+            LogManager.Instance.AddLog("크랙카드는 한턴에 한번만 사용 가능합니다.");
             return;
         }
 
@@ -53,8 +71,7 @@ public class DeckManager : SingleTon<DeckManager>
             Debug.LogWarning("덱에 없는 카드입니다!");
             return;
         }
-
-        usedCount++;
+        
         myDeck.Remove(card);
     }
 
