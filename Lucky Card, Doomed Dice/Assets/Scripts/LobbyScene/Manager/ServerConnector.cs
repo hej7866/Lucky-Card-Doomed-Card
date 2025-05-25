@@ -57,7 +57,6 @@ public class ServerConnector : MonoBehaviour
 
         PlayFabClientAPI.UpdateUserTitleDisplayName(request, result =>
         {
-            statusText.text = $"닉네임 '{result.DisplayName}' 저장 완료!";
             Debug.Log($"닉네임 저장 성공: {result.DisplayName}");
 
             // PlayFab 로그인 & 닉네임 저장 후 Photon 서버 연결 시작

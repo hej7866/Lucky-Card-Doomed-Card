@@ -41,7 +41,7 @@ public class BattleManager : MonoBehaviourPunCallbacks
         int damage = 0;
 
         // ===== 전투 판정 =====
-        if (playerAttack && enemyAttack)
+        if (playerAttack && enemyAttack) // 공격 vs 공격
         {
             if (playerScore > enemyScore)
             {
@@ -56,19 +56,19 @@ public class BattleManager : MonoBehaviourPunCallbacks
                 damage = enemyScore * 2;
             }
         }
-        else if (playerAttack && !enemyAttack && playerScore > enemyScore)
+        else if (playerAttack && !enemyAttack && playerScore > enemyScore) // 공격 vs 수비
         {
             winnerActor = PhotonNetwork.LocalPlayer.ActorNumber;
             loserActor = enemy.ActorNumber;
             damage = playerScore - enemyScore;
         }
-        else if (!playerAttack && enemyAttack && enemyScore > playerScore)
+        else if (!playerAttack && enemyAttack && enemyScore > playerScore) // 수비 vs 공격
         {
             winnerActor = enemy.ActorNumber;
             loserActor = PhotonNetwork.LocalPlayer.ActorNumber;
             damage = enemyScore - playerScore;
         }
-        else if (!playerAttack && !enemyAttack)
+        else if (!playerAttack && !enemyAttack) // 수비 vs 수비
         {
             if (playerScore > enemyScore)
             {
@@ -123,6 +123,7 @@ public class BattleManager : MonoBehaviourPunCallbacks
         RectTransform to = isWinner ? enemyPanel : myPanel; // 폴스면 enemyPanel이 쏨
 
         BulletEffect cannon = FindObjectOfType<BulletEffect>();
+        AudioManager.Instance.PlayLaserSFX();
         cannon?.FireBullet(from, to, bulletCount);
         to.GetComponent<Effect>()?.PlayHitEffect(damage);
     }

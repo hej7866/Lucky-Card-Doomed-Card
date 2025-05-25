@@ -23,6 +23,7 @@ public class BulletEffect : MonoBehaviour
             DOVirtual.DelayedCall(currentDelay, () =>
             {
                 GameObject bullet = Instantiate(bulletPrefab, uiCanvas);
+                bullet.transform.SetSiblingIndex(0); // 가장 아래로 이동
                 RectTransform bulletRt = bullet.GetComponent<RectTransform>();
 
                 Vector2 startPos = start.anchoredPosition;

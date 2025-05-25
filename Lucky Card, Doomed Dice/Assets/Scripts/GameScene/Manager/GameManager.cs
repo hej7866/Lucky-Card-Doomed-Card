@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             LogManager.Instance.AddRPCLog("상대방이 나갔습니다. 게임이 종료됩니다.");
             EndGame();
 
-            photonView.RPC("GameOver", RpcTarget.All);
+            //photonView.RPC("GameOver", RpcTarget.All);
         }
     }
 

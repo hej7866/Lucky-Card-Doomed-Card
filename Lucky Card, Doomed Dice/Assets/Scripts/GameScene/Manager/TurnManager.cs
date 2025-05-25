@@ -20,8 +20,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [SerializeField] private int maxTurns = 10;
 
     public int currTurn = 1;
-    public float thinkingTime = 30f;
-    public float battleTime = 15f;
+    public float strategyTime = 20f;
+    public float battleTime = 10f;
     private bool isTurnActive = false;
     private double turnEndTime;
 
@@ -86,7 +86,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
             photonView.RPC("SyncTurn", RpcTarget.All, currTurn);
 
             // **전략 페이즈 (30초) - 점수 숨기기**
-            StartTurnTimer(thinkingTime, TurnPhase.Strategy, $"전략 {currTurn}페이즈", false);
+            StartTurnTimer(strategyTime, TurnPhase.Strategy, $"전략 {currTurn}페이즈", false);
             yield return new WaitUntil(() => !isTurnActive);
 
             // **전투 페이즈 (15초) - 점수 공개 & 데미지 계산**
