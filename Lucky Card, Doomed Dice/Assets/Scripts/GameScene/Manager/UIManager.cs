@@ -10,8 +10,8 @@ public class UIManager : MonoBehaviourPunCallbacks
     public static UIManager Instance;
 
     [Header("플레이어 / 적 닉네임 및 체력 Text")]
-    public GameObject playerPanel;
-    public GameObject enemyPanel;
+    public RectTransform playerPanel;
+    public RectTransform enemyPanel;
 
     [SerializeField] private Text playerNickname;
     [SerializeField] private Text playerHealthText;

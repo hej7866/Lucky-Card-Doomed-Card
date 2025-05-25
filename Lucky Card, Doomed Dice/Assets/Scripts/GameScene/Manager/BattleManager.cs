@@ -1,7 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using ExitGames.Client.Photon;
 
 public class BattleManager : MonoBehaviourPunCallbacks
 {
@@ -15,103 +14,116 @@ public class BattleManager : MonoBehaviourPunCallbacks
 
     public void CalculateBattle()
     {
-        // 내 정보 가져오기
+        if (!PhotonNetwork.IsMasterClient) return; // 방장만 전투 계산
+
         if (!PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Score", out object playerScoreObj) ||
             !PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("isAttackSelected", out object playerAttackObj))
         {
-            Debug.LogError("로컬 플레이어의 Score 혹은 isAttackSelected를 찾을 수 없습니다! 전투 계산 중단");
+            Debug.LogError("내 Score 또는 isAttackSelected 없음");
+            return;
+        }
+
+        Player enemy = PhotonNetwork.PlayerListOthers[0];
+        if (!enemy.CustomProperties.TryGetValue("Score", out object enemyScoreObj) ||
+            !enemy.CustomProperties.TryGetValue("isAttackSelected", out object enemyAttackObj))
+        {
+            Debug.LogError("상대 Score 또는 isAttackSelected 없음");
             return;
         }
 
         int playerScore = (int)playerScoreObj;
         bool playerAttack = (bool)playerAttackObj;
-
-        // 상대방 정보 가져오기
-        if (!PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("EnemyScore", out object enemyScoreObj) ||
-            !PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("EnemyAttack", out object enemyAttackObj))
-        {
-            Debug.LogError("EnemyScore 또는 EnemyAttack 값을 찾을 수 없습니다! 전투 계산 중단");
-            return;
-        }
-
         int enemyScore = (int)enemyScoreObj;
         bool enemyAttack = (bool)enemyAttackObj;
 
-        int myActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-        int enemyActorNumber = PhotonNetwork.PlayerListOthers[0].ActorNumber;
-
-        PlayerManager myPlayer = PlayerManager.GetPlayer(myActorNumber);
-        PlayerManager enemyPlayer = PlayerManager.GetPlayer(enemyActorNumber);
-
-        if (myPlayer == null || enemyPlayer == null)
-        {
-            Debug.LogError("PlayerManager 인스턴스를 찾을 수 없습니다!");
-            return;
-        }
-
-        // 연출 유틸
-        var cannon = FindObjectOfType<BulletEffect>();
+        int winnerActor = -1;
+        int loserActor = -1;
+        int damage = 0;
 
         // ===== 전투 판정 =====
-
         if (playerAttack && enemyAttack)
         {
             if (playerScore > enemyScore)
             {
-                int dmg = playerScore * 2;
-                enemyPlayer.TakeDamage(dmg);
-                UIManager.Instance.enemyPanel.GetComponent<Effect>()?.PlayHitEffect(dmg);
-                cannon?.FireBullet(UIManager.Instance.playerPanel.GetComponent<RectTransform>(), UIManager.Instance.enemyPanel.GetComponent<RectTransform>(), 3);
+                winnerActor = PhotonNetwork.LocalPlayer.ActorNumber;
+                loserActor = enemy.ActorNumber;
+                damage = playerScore * 2;
             }
             else if (enemyScore > playerScore)
             {
-                int dmg = enemyScore * 2;
-                myPlayer.TakeDamage(dmg);
-                UIManager.Instance.playerPanel.GetComponent<Effect>()?.PlayHitEffect(dmg);
-                cannon?.FireBullet(UIManager.Instance.enemyPanel.GetComponent<RectTransform>(), UIManager.Instance.playerPanel.GetComponent<RectTransform>(), 3);
+                winnerActor = enemy.ActorNumber;
+                loserActor = PhotonNetwork.LocalPlayer.ActorNumber;
+                damage = enemyScore * 2;
             }
         }
-        else if (playerAttack && !enemyAttack)
+        else if (playerAttack && !enemyAttack && playerScore > enemyScore)
         {
-            if (playerScore > enemyScore)
-            {
-                int dmg = playerScore - enemyScore;
-                enemyPlayer.TakeDamage(dmg);
-                UIManager.Instance.enemyPanel.GetComponent<Effect>()?.PlayHitEffect(dmg);
-                cannon?.FireBullet(UIManager.Instance.playerPanel.GetComponent<RectTransform>(), UIManager.Instance.enemyPanel.GetComponent<RectTransform>(), 3);
-            }
+            winnerActor = PhotonNetwork.LocalPlayer.ActorNumber;
+            loserActor = enemy.ActorNumber;
+            damage = playerScore - enemyScore;
         }
-        else if (!playerAttack && enemyAttack)
+        else if (!playerAttack && enemyAttack && enemyScore > playerScore)
         {
-            if (enemyScore > playerScore)
-            {
-                int dmg = enemyScore - playerScore;
-                myPlayer.TakeDamage(dmg);
-                UIManager.Instance.playerPanel.GetComponent<Effect>()?.PlayHitEffect(dmg);
-                cannon?.FireBullet(UIManager.Instance.enemyPanel.GetComponent<RectTransform>(), UIManager.Instance.playerPanel.GetComponent<RectTransform>(), 3);
-            }
+            winnerActor = enemy.ActorNumber;
+            loserActor = PhotonNetwork.LocalPlayer.ActorNumber;
+            damage = enemyScore - playerScore;
         }
         else if (!playerAttack && !enemyAttack)
         {
             if (playerScore > enemyScore)
             {
-                int dmg = playerScore;
-                myPlayer.TakeDamage(dmg);
-                UIManager.Instance.playerPanel.GetComponent<Effect>()?.PlayHitEffect(dmg);
-                cannon?.FireBullet(UIManager.Instance.enemyPanel.GetComponent<RectTransform>(), UIManager.Instance.playerPanel.GetComponent<RectTransform>(), 3);
+                winnerActor = enemy.ActorNumber;
+                loserActor = PhotonNetwork.LocalPlayer.ActorNumber;
+                damage = playerScore;
             }
             else if (enemyScore > playerScore)
             {
-                int dmg = enemyScore;
-                enemyPlayer.TakeDamage(dmg);
-                UIManager.Instance.enemyPanel.GetComponent<Effect>()?.PlayHitEffect(dmg);
-                cannon?.FireBullet(UIManager.Instance.playerPanel.GetComponent<RectTransform>(), UIManager.Instance.enemyPanel.GetComponent<RectTransform>(), 3);
+                winnerActor = PhotonNetwork.LocalPlayer.ActorNumber;
+                loserActor = enemy.ActorNumber;
+                damage = enemyScore;
             }
         }
 
+        if (winnerActor == -1 || loserActor == -1)
+        {
+            Debug.Log("무승부 또는 전투 없음");
+            return;
+        }
+
+        // 체력 감소
+        PlayerManager loserPM = PlayerManager.GetPlayer(loserActor);
+        if (loserPM != null)
+        {
+            loserPM.TakeDamage(damage);
+        }
+
         // 체력 동기화
-        UIManager.Instance.photonView.RPC("SyncHealth", RpcTarget.All,
-            myActorNumber, enemyActorNumber, myPlayer.playerHealth, enemyPlayer.playerHealth);
+        UIManager.Instance.photonView.RPC
+        (
+            "SyncHealth",
+            RpcTarget.All,
+            PhotonNetwork.LocalPlayer.ActorNumber,
+            enemy.ActorNumber,
+            PlayerManager.GetPlayer(PhotonNetwork.LocalPlayer.ActorNumber).playerHealth,
+            PlayerManager.GetPlayer(enemy.ActorNumber).playerHealth
+        );
+
+        // 연출 정보 전송
+        photonView.RPC("PlayBulletAnimation", RpcTarget.All, winnerActor, damage, 3);
     }
 
+    [PunRPC]
+    private void PlayBulletAnimation(int winnerActor, int damage, int bulletCount)
+    {
+        RectTransform myPanel = UIManager.Instance.playerPanel;
+        RectTransform enemyPanel = UIManager.Instance.enemyPanel;
+
+        bool isWinner = PhotonNetwork.LocalPlayer.ActorNumber == winnerActor; // 위너 액터가 나인가?
+        RectTransform from = isWinner ? myPanel : enemyPanel; // 트루면 myPanel이 쏨
+        RectTransform to = isWinner ? enemyPanel : myPanel; // 폴스면 enemyPanel이 쏨
+
+        BulletEffect cannon = FindObjectOfType<BulletEffect>();
+        cannon?.FireBullet(from, to, bulletCount);
+        to.GetComponent<Effect>()?.PlayHitEffect(damage);
+    }
 }

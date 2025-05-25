@@ -55,6 +55,8 @@ MonoBehaviour:
   - UpdateTurnText
   - ResetGameStateRPC
   - ResetTurnState
+  - PlayBulletAnimation
+  - FireBullet
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
