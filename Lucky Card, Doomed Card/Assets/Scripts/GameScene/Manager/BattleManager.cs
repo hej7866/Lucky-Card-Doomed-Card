@@ -96,9 +96,13 @@ public class BattleManager : MonoBehaviourPunCallbacks
         {
             loserPM.TakeDamage(damage);
         }
+        else
+        {
+            Debug.Log("패자 없음.");
+        }
 
         // 체력 동기화
-        UIManager.Instance.photonView.RPC
+            UIManager.Instance.photonView.RPC
         (
             "SyncHealth",
             RpcTarget.All,

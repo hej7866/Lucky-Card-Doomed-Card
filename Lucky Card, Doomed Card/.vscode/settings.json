@@ -56,7 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    
-    "dotnet.defaultSolution": "Lucky Card, Doomed Dice.sln"
-    
+    "dotnet.defaultSolution": "Lucky Card, Doomed Card.sln"
 }
