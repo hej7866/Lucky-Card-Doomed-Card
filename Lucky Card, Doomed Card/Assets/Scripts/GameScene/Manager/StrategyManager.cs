@@ -25,23 +25,23 @@
 
         private void Start()
         {
-            CardManager.Instance.OnCardNumberChanged += _ => CalculateScore();
-            DiceManager.Instance.OnDiceNumberChanged += _ => CalculateScore();
+            CardManager.Instance.OnCard01NumberChanged += _ => CalculateScore();
+            CardManager.Instance.OnCard02NumberChanged += _ => CalculateScore();
         }
 
-        public int Card
+        public int Card01
         {
             get
             {
-                return CardManager.Instance.cardNumber;
+                return CardManager.Instance.card01Number;
             } 
         }
         
-        public int Dice
+        public int Card02
         {
             get
             {
-                return DiceManager.Instance.diceNumber;
+                return CardManager.Instance.card02Number;
             }
         }
 
@@ -49,7 +49,7 @@
 
         public void CalculateScore()
         {
-            int newScore = CardManager.Instance.cardNumber * DiceManager.Instance.diceNumber;
+            int newScore = Card01 * Card02;
             
             if (newScore != currentScore)
             {
@@ -65,6 +65,12 @@
 
         public void SelectScore()
         {
+            if (TurnManager.Instance.CurrentPhase == TurnManager.TurnPhase.Battle)
+            {
+                LogManager.Instance.AddLog("전투페이즈에는 점수를 결정할 수 없습니다!");
+                return;
+            }
+
             TurnManager.Instance.isScoreSelected = true;
             LogManager.Instance.AddLog("점수를 결정하였습니다! 공 / 수를 선택해주세요.");
             attackBtn.SetActive(true);

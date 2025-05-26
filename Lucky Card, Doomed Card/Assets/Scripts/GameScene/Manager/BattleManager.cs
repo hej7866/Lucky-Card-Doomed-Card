@@ -90,27 +90,29 @@ public class BattleManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // 체력 감소
+        // 체력감소
         PlayerManager loserPM = PlayerManager.GetPlayer(loserActor);
         if (loserPM != null)
         {
-            loserPM.TakeDamage(damage);
+            loserPM.photonView.RPC("RpcTakeDamage", loserPM.photonView.Owner, damage);
         }
+
+
         else
         {
             Debug.Log("패자 없음.");
         }
 
         // 체력 동기화
-            UIManager.Instance.photonView.RPC
-        (
-            "SyncHealth",
-            RpcTarget.All,
-            PhotonNetwork.LocalPlayer.ActorNumber,
-            enemy.ActorNumber,
-            PlayerManager.GetPlayer(PhotonNetwork.LocalPlayer.ActorNumber).playerHealth,
-            PlayerManager.GetPlayer(enemy.ActorNumber).playerHealth
-        );
+        // UIManager.Instance.photonView.RPC
+        // (
+        //     "SyncHealth",
+        //     RpcTarget.All,
+        //     PhotonNetwork.LocalPlayer.ActorNumber,
+        //     enemy.ActorNumber,
+        //     PlayerManager.GetPlayer(PhotonNetwork.LocalPlayer.ActorNumber).playerHealth,
+        //     PlayerManager.GetPlayer(enemy.ActorNumber).playerHealth
+        // );
 
         // 연출 정보 전송
         photonView.RPC("PlayBulletAnimation", RpcTarget.All, winnerActor, damage, 3);

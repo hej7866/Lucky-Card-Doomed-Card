@@ -24,17 +24,21 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void TakeDamage(int damage)
+    [PunRPC]
+    public void RpcTakeDamage(int damage)
     {
-        // if (!photonView.IsMine) return; // ✅ 내 캐릭터만 체력 감소
+        Debug.Log($"[RpcTakeDamage] {PhotonNetwork.NickName} 체력 감소: {damage}");
 
         playerHealth -= damage;
         if (playerHealth < 0) playerHealth = 0;
 
-        // // 체력 변경을 Photon에 업데이트
-        // Hashtable props = new Hashtable { { "Health", playerHealth } };
-        // PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        Hashtable props = new Hashtable { { "Health", playerHealth } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
+
+
+
+
 
     public void SetHealth(int hp)
     {

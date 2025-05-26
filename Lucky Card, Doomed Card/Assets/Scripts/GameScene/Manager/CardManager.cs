@@ -14,11 +14,15 @@ public class CardManager : SingleTon<CardManager>
     Image card01Number_img;
     Image card02Number_img;
 
-    public int drawCount = 0;
-    public int cardNumber;
+    public int card01DrawCount = 0;
+    public int card02DrawCount = 0;
+    public int card01Number;
+    public int card02Number;
 
-    public event Action<int> OnCardNumberChanged; 
-    public event Action<int> OnDrawCountChanged;
+    public event Action<int> OnCard01NumberChanged; 
+    public event Action<int> OnCard02NumberChanged; 
+    public event Action<int, int> OnCard01DrawCountChanged;
+    public event Action<int, int> OnCard02DrawCountChanged;
 
 
     void Start()
@@ -29,17 +33,19 @@ public class CardManager : SingleTon<CardManager>
 
     public void DrawCard01()
     {
-        DrawCard();
-        card01Number_img.sprite = cardImgs[cardNumber];
+        card01DrawCount++;
+        DrawCard(card01DrawCount,1);
+        card01Number_img.sprite = cardImgs[card01Number];
     }
 
     public void DrawCard02()
     {
-        DrawCard();
-        card02Number_img.sprite = cardImgs[cardNumber];
+        card02DrawCount++;
+        DrawCard(card02DrawCount,2);
+        card02Number_img.sprite = cardImgs[card02Number];
     }
 
-    public void DrawCard()
+    public void DrawCard(int drawCount, int cardNum)
     {
         if (TurnManager.Instance.CurrentPhase == TurnManager.TurnPhase.Battle)
         {
@@ -47,12 +53,11 @@ public class CardManager : SingleTon<CardManager>
             return;
         }
 
-        if (drawCount >= 3)
+        if (drawCount > 3)
         {
             LogManager.Instance.AddLog("카드를 더이상 뽑을 수 없습니다.");
             return;
         }
-
 
         if (TurnManager.Instance.isScoreSelected)
         {
@@ -60,23 +65,36 @@ public class CardManager : SingleTon<CardManager>
             return;
         }
 
-        drawCount++; // 카드를 뽑은 횟수
+        if (cardNum == 1)
+        {
+            card01Number = UnityEngine.Random.Range(1, 14);
+            OnCard01DrawCountChanged?.Invoke(drawCount, 1);
+            OnCard01NumberChanged?.Invoke(card01Number);
 
-        cardNumber = UnityEngine.Random.Range(1, 14);
-
-        OnDrawCountChanged?.Invoke(drawCount);
-        OnCardNumberChanged?.Invoke(cardNumber);
-        
-        LogManager.Instance.AddLog($"카드를 뽑아 숫자{cardNumber}가 나왔습니다!!");
+            LogManager.Instance.AddLog($"카드를 뽑아 숫자{card01Number}가 나왔습니다!!");
+        }
+        else if (cardNum == 2)
+        {
+            card02Number = UnityEngine.Random.Range(1, 14);
+            OnCard02DrawCountChanged?.Invoke(drawCount, 2);
+            OnCard02NumberChanged?.Invoke(card02Number);
+            LogManager.Instance.AddLog($"카드를 뽑아 숫자{card02Number}가 나왔습니다!!");
+        }
     }
 
     public void ResetCard()
     {
-        drawCount = 0;
-        cardNumber = 0;
+        card01DrawCount = 0;
+        card02DrawCount = 0;
+        card01Number = 0;
+        card02Number = 0;
 
-        OnDrawCountChanged?.Invoke(drawCount);
-        OnCardNumberChanged?.Invoke(cardNumber);
+        OnCard01DrawCountChanged?.Invoke(card01DrawCount, 1);
+        OnCard02DrawCountChanged?.Invoke(card02DrawCount, 2);
+
+        OnCard01NumberChanged?.Invoke(card01Number);
+        OnCard02NumberChanged?.Invoke(card02Number);
+
         card01Number_img.sprite = cardImgs[0];
         card02Number_img.sprite = cardImgs[0];
     }

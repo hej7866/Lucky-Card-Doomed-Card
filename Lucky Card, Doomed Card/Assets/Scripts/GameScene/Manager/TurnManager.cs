@@ -151,7 +151,6 @@ public class TurnManager : MonoBehaviourPunCallbacks
         StrategyManager.Instance.isDefenceSelected = false;
 
         CardManager.Instance.ResetCard();
-        DiceManager.Instance.ResetDice();
 
         // 초기화할 때 `null`을 사용하여 완전히 지움
         ExitGames.Client.Photon.Hashtable resetProps = new ExitGames.Client.Photon.Hashtable

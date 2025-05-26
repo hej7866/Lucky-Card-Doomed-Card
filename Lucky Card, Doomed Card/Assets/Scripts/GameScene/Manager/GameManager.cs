@@ -69,7 +69,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         TurnManager.Instance.ResetGameState();
         StrategyManager.Instance.ResetStrategyState();
         CardManager.Instance.ResetCard();
-        DiceManager.Instance.ResetDice();
         DeckManager.Instance.InitializeDeck(); // 크랙카드도 초기화
     }
 

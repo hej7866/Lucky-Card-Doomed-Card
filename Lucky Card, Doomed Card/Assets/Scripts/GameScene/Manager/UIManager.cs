@@ -30,8 +30,8 @@ public class UIManager : MonoBehaviourPunCallbacks
 
 
     [Header("다이스 / 카드 카운트")]
-    [SerializeField] private Text DrawCountText;
-    [SerializeField] private Text RollCountText;
+    [SerializeField] private Text card01DrawCountText;
+    [SerializeField] private Text card02DrawCountText;
 
     [Header("설정 창")]
     public GameObject settingPanel;
@@ -51,8 +51,8 @@ public class UIManager : MonoBehaviourPunCallbacks
         StartCoroutine(DelayedSetup());
 
         // drawCount UI 갱신 이벤트 연결
-        CardManager.Instance.OnDrawCountChanged += UpdateDrawCount;
-        DiceManager.Instance.OnRollCountChanged += UpdateRollCount;
+        CardManager.Instance.OnCard01DrawCountChanged += UpdateCardDrawCount;
+        CardManager.Instance.OnCard02DrawCountChanged += UpdateCardDrawCount;
 
         TurnManager.Instance.OnTurnPhaseChanged += HandleTurnPhaseChanged;
     }
@@ -175,33 +175,38 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC] // 체력 동기화
-    public void SyncHealth(int myActorNumber, int enemyActorNumber, int newPlayerHealth, int newEnemyHealth)
-    {
-        Debug.Log("SyncHealth 실행");
-        int localActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+    // [PunRPC] // 체력 동기화
+    // public void SyncHealth(int myActorNumber, int enemyActorNumber, int newPlayerHealth, int newEnemyHealth)
+    // {
+    //     Debug.Log("SyncHealth 실행");
+    //     int localActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
 
-        if (localActorNumber == myActorNumber)
+    //     if (localActorNumber == myActorNumber)
+    //     {
+    //         playerHealthText.text = $"HP: {newPlayerHealth}";
+    //         enemyHealthText.text = $"HP: {newEnemyHealth}";
+    //     }
+    //     else if (localActorNumber == enemyActorNumber)
+    //     {
+    //         playerHealthText.text = $"HP: {newEnemyHealth}";
+    //         enemyHealthText.text = $"HP: {newPlayerHealth}";
+    //     }
+    // }
+
+    public void UpdateCardDrawCount(int drawCount, int cardNum)
+    {
+        if (cardNum == 1)
         {
-            playerHealthText.text = $"HP: {newPlayerHealth}";
-            enemyHealthText.text = $"HP: {newEnemyHealth}";
+            card01DrawCountText.text = $"{drawCount} / 3";
         }
-        else if (localActorNumber == enemyActorNumber)
+        else if (cardNum == 2)
         {
-            playerHealthText.text = $"HP: {newEnemyHealth}";
-            enemyHealthText.text = $"HP: {newPlayerHealth}";
+            card02DrawCountText.text = $"{drawCount} / 3";
         }
     }
 
-    public void UpdateDrawCount(int drawCount)
-    {
-        DrawCountText.text = $"{drawCount} / 3";
-    }
 
-    public void UpdateRollCount(int rollCount)
-    {
-        RollCountText.text = $"{rollCount} / 3";
-    }
+
 
     public void ShowGameResultPanel(string message) // 게임 종료 스크린 띄우는 로직
     {

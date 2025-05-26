@@ -32,7 +32,6 @@ public class CrackCardClick : MonoBehaviour
             return;
         }
 
-
         if (TurnManager.Instance.isScoreSelected)
         {
             LogManager.Instance.AddLog("이미 스코어를 결정하셨습니다.");
