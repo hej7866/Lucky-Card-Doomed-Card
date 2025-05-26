@@ -9,19 +9,34 @@ public class CardManager : SingleTon<CardManager>
 {
     [Header("카드")]
     [SerializeField] private Sprite[] cardImgs;
-    [SerializeField] private Button card;
-    Image cardNumber_img;
+    [SerializeField] private Button card01;
+    [SerializeField] private Button card02;
+    Image card01Number_img;
+    Image card02Number_img;
 
     public int drawCount = 0;
     public int cardNumber;
 
     public event Action<int> OnCardNumberChanged; 
-    public event Action<int> OnDrawCountChanged; 
+    public event Action<int> OnDrawCountChanged;
 
 
     void Start()
     {
-        cardNumber_img = card.GetComponent<Image>();
+        card01Number_img = card01.GetComponent<Image>();
+        card02Number_img = card02.GetComponent<Image>();
+    }
+
+    public void DrawCard01()
+    {
+        DrawCard();
+        card01Number_img.sprite = cardImgs[cardNumber];
+    }
+
+    public void DrawCard02()
+    {
+        DrawCard();
+        card02Number_img.sprite = cardImgs[cardNumber];
     }
 
     public void DrawCard()
@@ -32,14 +47,14 @@ public class CardManager : SingleTon<CardManager>
             return;
         }
 
-        if(drawCount >= 3)
+        if (drawCount >= 3)
         {
             LogManager.Instance.AddLog("카드를 더이상 뽑을 수 없습니다.");
             return;
         }
-        
 
-        if(TurnManager.Instance.isScoreSelected)
+
+        if (TurnManager.Instance.isScoreSelected)
         {
             LogManager.Instance.AddLog("이미 스코어를 결정하셨습니다.");
             return;
@@ -47,12 +62,11 @@ public class CardManager : SingleTon<CardManager>
 
         drawCount++; // 카드를 뽑은 횟수
 
-        cardNumber = UnityEngine.Random.Range(1,14);
-        
+        cardNumber = UnityEngine.Random.Range(1, 14);
+
         OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
         
-        cardNumber_img.sprite = cardImgs[cardNumber];
         LogManager.Instance.AddLog($"카드를 뽑아 숫자{cardNumber}가 나왔습니다!!");
     }
 
@@ -63,6 +77,7 @@ public class CardManager : SingleTon<CardManager>
 
         OnDrawCountChanged?.Invoke(drawCount);
         OnCardNumberChanged?.Invoke(cardNumber);
-        cardNumber_img.sprite = cardImgs[0];
+        card01Number_img.sprite = cardImgs[0];
+        card02Number_img.sprite = cardImgs[0];
     }
 }
