@@ -1,6 +1,8 @@
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
+
 
 public class BattleManager : MonoBehaviourPunCallbacks
 {
@@ -10,6 +12,40 @@ public class BattleManager : MonoBehaviourPunCallbacks
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+    }
+
+    public void StartBattleWhenReady()
+    {
+        Debug.Log("[BattleManager] StartBattleWhenReady 호출됨");
+        StartCoroutine(WaitAndStartBattle());
+    }
+
+    IEnumerator WaitAndStartBattle()
+    {
+        Debug.Log("[BattleManager] WaitAndStartBattle 시작");
+
+        // 오류 디버그용 .. 
+        if (PlayerManager.GetPlayer(PhotonNetwork.LocalPlayer.ActorNumber) == null)
+        {
+            Debug.LogError("1번문제: 내 PlayerManager 없음");
+        }
+        else if (PhotonNetwork.PlayerListOthers.Length <= 0)
+        {
+            Debug.LogError("2번문제: 상대 없음");
+        }
+        else if (PlayerManager.GetPlayer(PhotonNetwork.PlayerListOthers[0].ActorNumber) == null)
+        {
+            Debug.LogError("3번문제: 상대 PlayerManager 없음");
+        }
+
+        yield return new WaitUntil(() =>
+            PlayerManager.GetPlayer(PhotonNetwork.LocalPlayer.ActorNumber) != null &&
+            PhotonNetwork.PlayerListOthers.Length > 0 &&
+            PlayerManager.GetPlayer(PhotonNetwork.PlayerListOthers[0].ActorNumber) != null
+        );
+
+        Debug.Log("[BattleManager] 조건 만족 → CalculateBattle 호출");
+        CalculateBattle();
     }
 
     public void CalculateBattle()
@@ -96,8 +132,6 @@ public class BattleManager : MonoBehaviourPunCallbacks
         {
             loserPM.photonView.RPC("RpcTakeDamage", loserPM.photonView.Owner, damage);
         }
-
-
         else
         {
             Debug.Log("패자 없음.");

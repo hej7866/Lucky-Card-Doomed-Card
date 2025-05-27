@@ -93,7 +93,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
             StartTurnTimer(battleTime, TurnPhase.Battle, $"전투 {currTurn}페이즈", true);
 
             yield return new WaitForSeconds(2f);
-            BattleManager.Instance.CalculateBattle();
+            BattleManager.Instance.StartBattleWhenReady();
 
             yield return new WaitUntil(() => !isTurnActive);
 
@@ -101,7 +101,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
             photonView.RPC("UpdateTurnText", RpcTarget.All, currTurn);
             ResetSetting();
 
-            // ✅ 게임 종료 조건 확인 후 종료
+            // 게임 종료 조건 확인 후 종료
             if (CheckGameOverCondition())
             {
                 GameManager.Instance.EndGame();
@@ -120,21 +120,22 @@ public class TurnManager : MonoBehaviourPunCallbacks
     }
 
 
-    private bool CheckGameOverCondition() // 게임 종료조건을 만족했는지 체크하는 로직
+    private bool CheckGameOverCondition()
     {
-        int alivePlayers = 0;
+        int aliveCount = 0;
 
-        foreach (var player in PlayerManager.Players.Values)
+        foreach (Player p in PhotonNetwork.PlayerList)
         {
-            if (player.playerHealth > 0)
+            if (p.CustomProperties.TryGetValue("Health", out object healthObj) &&
+                healthObj is int health && health > 0)
             {
-                alivePlayers++;
+                aliveCount++;
             }
         }
 
-        // 살아있는 플레이어가 1명 이하이면 게임 종료
-        return alivePlayers <= 1;
+        return aliveCount <= 1;
     }
+
 
     void ResetSetting()
     {
@@ -216,7 +217,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void GameOver()
     {
-        LogManager.Instance.AddRPCLog("게임이 끝났습니다! 승패를 결정하세요.");
+        GameManager.Instance.EndGame();
     }
 
 }

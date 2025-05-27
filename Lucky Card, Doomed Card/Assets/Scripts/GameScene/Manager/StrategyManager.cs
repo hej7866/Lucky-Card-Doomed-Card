@@ -71,6 +71,12 @@
                 return;
             }
 
+            if (TurnManager.Instance.isScoreSelected)
+            {
+                LogManager.Instance.AddLog("이미 점수를 결정하였습니다.");
+                return;
+            }
+
             TurnManager.Instance.isScoreSelected = true;
             LogManager.Instance.AddLog("점수를 결정하였습니다! 공 / 수를 선택해주세요.");
             attackBtn.SetActive(true);
@@ -118,7 +124,7 @@
             attackBtn.SetActive(false);
             defenceBtn.SetActive(false);
             
-            SaveProps(); // ✅ 공격/수비 선택 후 네트워크에 저장
+            SaveProps(); // 공격/수비 선택 후 네트워크에 저장
         }
 
         public void Defence()
@@ -143,7 +149,7 @@
                 PhotonNetwork.LocalPlayer.SetCustomProperties(Props);
             }
 
-            // ✅ 마스터 클라이언트가 상대방 점수를 가져와서 `EnemyScore`를 설정
+            // 마스터 클라이언트가 상대방 점수를 가져와서 `EnemyScore`를 설정
             if (PhotonNetwork.IsMasterClient)
             {
                 StartCoroutine(WaitForEnemyScoreAndSet());

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Photon.Pun;
+using System.Collections;
 using ExitGames.Client.Photon;
 using UnityEngine;
 
@@ -9,20 +10,25 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
     public int playerHealth = 500;
 
-    private void Start()
+    private IEnumerator Start()
     {
-        // photonView가 초기화된 후 등록 (Start에서 실행)
-        if (!Players.ContainsKey(photonView.Owner.ActorNumber))
-        {
-            Players[photonView.Owner.ActorNumber] = this;
-        }
+        yield return null;
 
-        if (photonView.IsMine) 
+        int actorNumber = photonView.OwnerActorNr;
+
+        // 무조건 덮어쓰기 (예전 것 제거)
+        Players[actorNumber] = this;
+        Debug.Log($"[PlayerManager] 등록 완료 : {actorNumber}");
+
+        if (photonView.IsMine)
         {
-            Hashtable props = new Hashtable { { "Health", playerHealth } };
+            ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable { { "Health", playerHealth } };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+            Debug.Log($"[PlayerManager] 내 초기 체력 등록 완료: {playerHealth}");
         }
     }
+
+
 
     [PunRPC]
     public void RpcTakeDamage(int damage)
@@ -32,12 +38,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         playerHealth -= damage;
         if (playerHealth < 0) playerHealth = 0;
 
-        Hashtable props = new Hashtable { { "Health", playerHealth } };
+        ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable { { "Health", playerHealth } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
-
-
-
 
 
     public void SetHealth(int hp)
