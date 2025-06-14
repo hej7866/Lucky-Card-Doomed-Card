@@ -26,8 +26,7 @@
 ```
 Assets/
 ├── Scripts/
-│ ├── Managers/ # 싱글톤 매니저 (BattleManager 등)
-│ ├── CardSystem/ # 카드 로직 및 데이터
+│ ├── Managers/ # 싱글톤 매니저 (GameManager 등)
 │ └── Battle/ # 전투 흐름 및 턴 관리
 ├── ScriptableObjects/
 │ └── Cards/ # 카드 데이터 정의
