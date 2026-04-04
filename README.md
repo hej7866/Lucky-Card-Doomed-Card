@@ -29,7 +29,7 @@ Assets/
 │ └── CrackCard/ # 크랙카드 시스템 관리
 │ └── Effect/ # 전투 이펙트 관리
 ├── ScriptableObjects/
-│ └── CrackCards/ # 크랙카드 데이터 정의
+│ └── CrackCards/ # 크랙카드 데이터 관리
 ├── Prefabs/ # 카드, UI, 효과 등 프리팹
 └── Scenes/ # 게임 씬 / 로비 씬
 ```
